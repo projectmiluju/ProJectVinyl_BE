@@ -1,7 +1,7 @@
 <p align="center">
 너를 위한 나를 위한 우리의 LP 커뮤니티
 </p>
-<h2 align="center">ProjectLp</h2>
+<h2 align="center">ProJectLp</h2>
 
 
 <p>
