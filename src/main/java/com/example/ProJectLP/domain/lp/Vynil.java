@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class Lp {
+public class Vynil {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
