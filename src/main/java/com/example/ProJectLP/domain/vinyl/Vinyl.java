@@ -3,6 +3,8 @@ package com.example.ProJectLP.domain.vinyl;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Builder
 @AllArgsConstructor
@@ -32,7 +34,15 @@ public class Vinyl {
     private String imageUrl;
 
     @Column
-    private Integer year;
+    private Integer releaseYear;
+
+    @Column
+    private LocalDateTime createdDate;
+
+    @PrePersist
+    public void creationDate(){
+        this.createdDate = LocalDateTime.now();
+    }
 
     //추가되어야할 항목
     //좋아요

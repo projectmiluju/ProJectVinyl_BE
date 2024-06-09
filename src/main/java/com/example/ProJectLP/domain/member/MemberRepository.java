@@ -1,4 +1,4 @@
-package com.example.ProJectLP.domain.user;
+package com.example.ProJectLP.domain.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
