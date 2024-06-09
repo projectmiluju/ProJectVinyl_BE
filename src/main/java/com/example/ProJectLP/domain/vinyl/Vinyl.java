@@ -3,6 +3,8 @@ package com.example.ProJectLP.domain.vinyl;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,9 +32,11 @@ public class Vinyl {
     @Column
     private String imageUrl;
 
+    @Column
+    private Integer year;
 
-
-
-
+    //추가되어야할 항목
+    //좋아요
+    //댓글
 
 }
