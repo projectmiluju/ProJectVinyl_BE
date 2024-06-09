@@ -3,7 +3,6 @@ package com.example.ProJectLP.domain.vinyl;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
 
 @Builder
 @AllArgsConstructor
