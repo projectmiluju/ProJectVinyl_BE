@@ -2,6 +2,7 @@ package com.example.ProJectLP.domain.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -29,5 +30,9 @@ public class Member {
     @PrePersist
     public void createDate(){
         this.createdDate = LocalDateTime.now();
+    }
+
+    public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
+        return passwordEncoder.matches(password, this.password);
     }
 }
