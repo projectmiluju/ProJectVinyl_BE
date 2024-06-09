@@ -1,7 +1,8 @@
 <p align="center">
-너를 위한 나를 위한 우리의 LP 커뮤니티
+너를 위한 나를 위한 우리를 위한<br>
+Our Vinyl Community
 </p>
-<h2 align="center">ProJectLp</h2>
+<h2 align="center">ProJect Vinyl</h2>
 
 
 <p>
@@ -9,6 +10,7 @@ Spring Boot 3.3.0<br>
 Spring Security 6<br>
 Gradle<br>
 Java 17<br>
+AWS<br>
 </p>
 
 <p>
