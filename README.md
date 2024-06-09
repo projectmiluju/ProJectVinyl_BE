@@ -6,7 +6,7 @@
 
 <p>
 Spring Boot 3.3.0<br>
-Spring Security 6
+Spring Security 6<br>
 Gradle<br>
 Java 17<br>
 </p>
