@@ -13,4 +13,5 @@ public class VinylResponseDto {
     private Integer id;
     private String title;
     private String description;
+    private String artist;
 }
