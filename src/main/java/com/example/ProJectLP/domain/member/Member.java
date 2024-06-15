@@ -25,6 +25,9 @@ public class Member {
     private String password;
 
     @Column
+    private boolean role;
+
+    @Column
     private LocalDateTime createdDate;
 
     @PrePersist

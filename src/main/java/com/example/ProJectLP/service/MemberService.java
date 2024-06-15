@@ -35,6 +35,7 @@ public class MemberService {
                 MemberResponseDto.builder()
                         .id(member.getId())
                         .username(member.getUsername())
+                        .role(member.isRole())
                         .createdDate(member.getCreatedDate())
                         .build()
         );

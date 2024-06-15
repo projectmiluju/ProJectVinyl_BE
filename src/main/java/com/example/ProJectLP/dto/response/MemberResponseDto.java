@@ -14,5 +14,6 @@ import java.time.LocalDateTime;
 public class MemberResponseDto {
     private Integer id;
     private String username;
+    private boolean role;
     private LocalDateTime createdDate;
 }
