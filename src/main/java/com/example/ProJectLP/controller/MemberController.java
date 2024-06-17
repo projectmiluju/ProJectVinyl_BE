@@ -22,13 +22,18 @@ public class MemberController {
     private final MemberService memberService;
 
     @RequestMapping(value = "/api/signup", method = RequestMethod.POST)
-    public ResponseDto<?> signup(@RequestBody @Valid MemberRequestDto requestDto) {
+    public ResponseDto<?> signUp(@RequestBody @Valid MemberRequestDto requestDto) {
         return memberService.createMember(requestDto);
     }
 
     @RequestMapping(value = "/api/signin", method = RequestMethod.POST)
-    public ResponseDto<?> signin(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response) {
+    public ResponseDto<?> signIn(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response) {
         return memberService.loginMember(requestDto, response);
+    }
+
+    @RequestMapping(value = "/api/signout", method = RequestMethod.GET)
+    public ResponseDto<?> signOut(HttpServletRequest request) {
+        return memberService.logoutMember(request);
     }
 
 }

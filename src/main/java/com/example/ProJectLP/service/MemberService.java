@@ -9,6 +9,7 @@ import com.example.ProJectLP.dto.request.SignInRequestDto;
 import com.example.ProJectLP.dto.response.MemberResponseDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -76,6 +77,23 @@ public class MemberService {
                         .build()
         );
 
+    }
+
+    @Transactional
+    public ResponseDto<?> logoutMember(HttpServletRequest request) {
+
+        if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
+            return ResponseDto.fail("403", "Token is not valid");
+        }
+
+        Member member = tokenProvider.getMemberFromAuthentication();
+
+        if (null == member) {
+            return ResponseDto.fail("400",
+                    "사용자를 찾을 수 없습니다.");
+        }
+
+        return tokenProvider.deleteRefreshToken(member);
     }
 
     @Transactional(readOnly = true)
