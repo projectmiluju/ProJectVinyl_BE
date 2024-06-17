@@ -39,7 +39,7 @@ public class VinylService {
             return ResponseDto.fail("400", "INVALID_TOKEN");
         }
 
-//        if (member.isRole()){
+        if (member.isRole()){
             Vinyl vinyl = Vinyl.builder()
                     .title(requestDto.getTitle())
                     .description(requestDto.getDescription())
@@ -60,8 +60,8 @@ public class VinylService {
                             .modifiedAt(vinyl.getModifiedAt())
                             .build()
             );
-//        }
-//        else return ResponseDto.fail("400", "관리자가 아닙니다.");
+        }
+        else return ResponseDto.fail("400", "관리자가 아닙니다.");
 
     }
 
