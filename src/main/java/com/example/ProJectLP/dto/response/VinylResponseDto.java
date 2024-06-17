@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VinylResponseDto {
-    private Integer id;
+    private Long id;
     private String title;
     private String description;
     private String artist;

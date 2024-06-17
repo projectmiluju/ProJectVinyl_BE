@@ -17,7 +17,7 @@ public class Vinyl extends TimeStamped {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String title;
