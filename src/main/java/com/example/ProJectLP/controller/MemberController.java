@@ -10,10 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,19 +20,31 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    //회원가입
     @RequestMapping(value = "/api/signup", method = RequestMethod.POST)
     public ResponseDto<?> signUp(@RequestBody @Valid MemberRequestDto requestDto) {
         return memberService.createMember(requestDto);
     }
 
+    //로그인
     @RequestMapping(value = "/api/signin", method = RequestMethod.POST)
     public ResponseDto<?> signIn(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response) {
         return memberService.loginMember(requestDto, response);
     }
 
+    //로그아웃
     @RequestMapping(value = "/api/signout", method = RequestMethod.GET)
     public ResponseDto<?> signOut(HttpServletRequest request) {
         return memberService.logoutMember(request);
     }
+
+    //아이디 중복검사
+    @RequestMapping(value = "/api/username", method = RequestMethod.POST)
+    public ResponseDto<?> usernameCheck(@RequestBody Map<String, String> body) {
+
+        return memberService.checkUsername(body.get("username"));
+    }
+
+
 
 }

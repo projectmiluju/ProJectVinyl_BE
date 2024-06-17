@@ -27,6 +27,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
+
+    //회원가입
     @Transactional
     public ResponseDto<?> createMember(MemberRequestDto requestDto) {
         if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
@@ -50,6 +52,7 @@ public class MemberService {
         );
     }
 
+    //로그인
     @Transactional
     public ResponseDto<?> loginMember(SignInRequestDto requestDto, HttpServletResponse response) {
         Member member = isPresentMemberByUsername(requestDto.getUsername());
@@ -79,6 +82,7 @@ public class MemberService {
 
     }
 
+    //로그아웃
     @Transactional
     public ResponseDto<?> logoutMember(HttpServletRequest request) {
 
@@ -96,6 +100,7 @@ public class MemberService {
         return tokenProvider.deleteRefreshToken(member);
     }
 
+    //
     @Transactional(readOnly = true)
     public Member isPresentMemberByUsername(String username) {
         Optional<Member> optionalMember = memberRepository.findByUsername(username);
@@ -106,6 +111,14 @@ public class MemberService {
         response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
+    }
+
+    // 아이디 중복검사
+    @Transactional
+    public ResponseDto<?> checkUsername(String username){
+        Member member = isPresentMemberByUsername(username);
+        if(member == null) return ResponseDto.success(true);
+        else return ResponseDto.fail("400","ID already exists");
     }
 
 }
