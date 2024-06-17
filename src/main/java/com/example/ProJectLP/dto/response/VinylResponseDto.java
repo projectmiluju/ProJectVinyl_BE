@@ -16,6 +16,7 @@ public class VinylResponseDto {
     private String title;
     private String description;
     private String artist;
+    private String genre;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }

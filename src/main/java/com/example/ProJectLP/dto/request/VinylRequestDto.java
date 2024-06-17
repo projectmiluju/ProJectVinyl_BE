@@ -17,5 +17,8 @@ public class VinylRequestDto {
     private String artist;
 
     @NotBlank
+    private String genre;
+
+    @NotBlank
     private String description;
 }
