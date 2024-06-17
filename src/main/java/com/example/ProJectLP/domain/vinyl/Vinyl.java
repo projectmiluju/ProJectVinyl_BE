@@ -35,7 +35,7 @@ public class Vinyl extends TimeStamped {
     private String imageUrl;
 
     @Column
-    private Integer releaseYear;
+    private Long releaseYear;
 
     //추가되어야할 항목
     //좋아요
