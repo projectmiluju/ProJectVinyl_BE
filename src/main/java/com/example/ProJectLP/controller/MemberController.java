@@ -6,6 +6,7 @@ import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +27,8 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/api/signin", method = RequestMethod.POST)
-    public ResponseDto<?> signin(@RequestBody @Valid SignInRequestDto requestDto, HttpServletRequest request) {
-        return memberService.loginMember(requestDto, request);
+    public ResponseDto<?> signin(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response) {
+        return memberService.loginMember(requestDto, response);
     }
 
 }
