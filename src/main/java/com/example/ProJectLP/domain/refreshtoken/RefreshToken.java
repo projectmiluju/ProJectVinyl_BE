@@ -1,5 +1,6 @@
-package com.example.ProJectLP.domain;
+package com.example.ProJectLP.domain.refreshtoken;
 
+import com.example.ProJectLP.domain.TimeStamped;
 import com.example.ProJectLP.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
