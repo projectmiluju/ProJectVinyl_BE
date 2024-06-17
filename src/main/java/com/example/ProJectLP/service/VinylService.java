@@ -40,6 +40,8 @@ public class VinylService {
                             .title(vinyl.getTitle())
                             .description(vinyl.getDescription())
                             .artist(vinyl.getArtist())
+                            .createdAt(vinyl.getCreatedAt())
+                            .modifiedAt(vinyl.getModifiedAt())
                             .build()
             );
         }

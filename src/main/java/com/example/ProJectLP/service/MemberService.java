@@ -40,7 +40,8 @@ public class MemberService {
                         .id(member.getId())
                         .username(member.getUsername())
                         .role(member.isRole())
-                        .createdDate(member.getCreatedDate())
+                        .createdAt(member.getCreatedAt())
+                        .modifiedAt(member.getModifiedAt())
                         .build()
         );
     }
@@ -50,9 +51,11 @@ public class MemberService {
         Member member = isPresentMemberByUsername(requestDto.getUsername());
         return ResponseDto.success(
                 MemberResponseDto.builder().
-                        id(member.getId()).
-                        username(member.getUsername()).
-                        role(member.isRole())
+                        id(member.getId())
+                        .username(member.getUsername())
+                        .role(member.isRole())
+                        .createdAt(member.getCreatedAt())
+                        .modifiedAt(member.getModifiedAt())
                         .build()
         );
 

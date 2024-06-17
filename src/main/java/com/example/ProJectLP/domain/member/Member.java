@@ -1,5 +1,6 @@
 package com.example.ProJectLP.domain.member;
 
+import com.example.ProJectLP.domain.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Member {
+public class Member extends TimeStamped {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -26,14 +27,6 @@ public class Member {
 
     @Column
     private boolean role;
-
-    @Column
-    private LocalDateTime createdDate;
-
-    @PrePersist
-    public void createDate(){
-        this.createdDate = LocalDateTime.now();
-    }
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password, this.password);

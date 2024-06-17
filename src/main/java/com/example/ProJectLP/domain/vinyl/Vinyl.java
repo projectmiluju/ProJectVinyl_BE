@@ -1,5 +1,6 @@
 package com.example.ProJectLP.domain.vinyl;
 
+import com.example.ProJectLP.domain.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Vinyl {
+public class Vinyl extends TimeStamped {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -35,14 +36,6 @@ public class Vinyl {
 
     @Column
     private Integer releaseYear;
-
-    @Column
-    private LocalDateTime createdDate;
-
-    @PrePersist
-    public void creationDate(){
-        this.createdDate = LocalDateTime.now();
-    }
 
     //추가되어야할 항목
     //좋아요
