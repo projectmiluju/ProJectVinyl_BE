@@ -1,9 +1,11 @@
 package com.example.ProJectLP.controller;
 
 import com.example.ProJectLP.dto.request.MemberRequestDto;
+import com.example.ProJectLP.dto.request.SignInRequestDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,11 @@ public class MemberController {
     @RequestMapping(value = "/api/signup", method = RequestMethod.POST)
     public ResponseDto<?> signup(@RequestBody @Valid MemberRequestDto requestDto) {
         return memberService.createMember(requestDto);
+    }
+
+    @RequestMapping(value = "/api/signin", method = RequestMethod.POST)
+    public ResponseDto<?> signin(@RequestBody @Valid SignInRequestDto requestDto, HttpServletRequest request) {
+        return memberService.loginMember(requestDto, request);
     }
 
 }

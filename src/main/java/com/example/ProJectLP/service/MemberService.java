@@ -3,14 +3,18 @@ package com.example.ProJectLP.service;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.member.MemberRepository;
 import com.example.ProJectLP.dto.request.MemberRequestDto;
+import com.example.ProJectLP.dto.request.SignInRequestDto;
 import com.example.ProJectLP.dto.response.MemberResponseDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -40,4 +44,24 @@ public class MemberService {
                         .build()
         );
     }
+
+    @Transactional
+    public ResponseDto<?> loginMember(SignInRequestDto requestDto, HttpServletRequest request) {
+        Member member = isPresentMemberByUsername(requestDto.getUsername());
+        return ResponseDto.success(
+                MemberResponseDto.builder().
+                        id(member.getId()).
+                        username(member.getUsername()).
+                        role(member.isRole())
+                        .build()
+        );
+
+    }
+
+    @Transactional(readOnly = true)
+    public Member isPresentMemberByUsername(String username) {
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        return optionalMember.orElse(null);
+    }
+
 }
