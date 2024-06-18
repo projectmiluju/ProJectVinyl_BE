@@ -29,4 +29,11 @@ public class VinylController {
         return vinylService.deleteVinyl(id,request);
     }
 
+    //vinyl 업데이트
+    @RequestMapping(value = "/update/vinyl/{id}", method = RequestMethod.PUT)
+    public ResponseDto<?> updateVinyl(@PathVariable Long id, @RequestPart VinylRequestDto requestDto,
+                                      @RequestPart MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+        return vinylService.updateVinyl(id,requestDto,multipartFile,request);
+    }
+
 }

@@ -25,7 +25,7 @@ public class VinylService {
     private final TokenProvider tokenProvider;
     private final S3Service s3Service;
 
-    //vinyl 삭제
+    //vinyl 등록
     @Transactional
     public ResponseDto<?> uploadVinyl(VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         if (null == request.getHeader("RefreshToken")) {
@@ -47,8 +47,8 @@ public class VinylService {
 
         if (member.isRole()){
 
-            String releaseYear = requestDto.getReleasedTime().substring(0,4);
-            String releaseMonth = requestDto.getReleasedTime().substring(4,6);
+            String releasedYear = requestDto.getReleasedTime().substring(0,4);
+            String releasedMonth = requestDto.getReleasedTime().substring(4,6);
 
 
             String imageUrl = s3Service.upload(multipartFile);
@@ -59,8 +59,8 @@ public class VinylService {
                     .artist(requestDto.getArtist())
                     .genre(requestDto.getGenre())
                     .imageUrl(imageUrl)
-                    .releasedYear(releaseYear)
-                    .releasedMonth(releaseMonth)
+                    .releasedYear(releasedYear)
+                    .releasedMonth(releasedMonth)
                     .build();
 
             vinylRepository.save(vinyl);
@@ -73,8 +73,8 @@ public class VinylService {
                             .artist(vinyl.getArtist())
                             .genre(vinyl.getGenre())
                             .imageUrl(vinyl.getImageUrl())
-                            .releasedYear(releaseYear)
-                            .releasedMonth(releaseMonth)
+                            .releasedYear(releasedYear)
+                            .releasedMonth(releasedMonth)
                             .createdAt(vinyl.getCreatedAt())
                             .modifiedAt(vinyl.getModifiedAt())
                             .build()
@@ -104,7 +104,7 @@ public class VinylService {
 
         Vinyl vinyl = isPresentVinyl(id);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing postId");
+            return ResponseDto.fail("400", "Not existing vinylId");
         }
 
         if (!member.isRole()) {
@@ -114,6 +114,92 @@ public class VinylService {
         s3Service.delete(vinyl);
         vinylRepository.delete(vinyl);
         return ResponseDto.success("delete success");
+    }
+
+    //vinyl 업데이트
+    @Transactional
+    public ResponseDto<?> updateVinyl(Long id, VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+        if (null == request.getHeader("RefreshToken")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("400", "INVALID_TOKEN");
+        }
+
+        Vinyl vinyl = isPresentVinyl(id);
+        if (null == vinyl) {
+            return ResponseDto.fail("400", "Not existing vinylId");
+        }
+
+        if (!member.isRole()) {
+            return ResponseDto.fail("400", "Update Admin Only");
+        }
+
+        if (requestDto.getTitle() == null || requestDto.getTitle().isEmpty()) {
+            vinyl.setTitle(vinyl.getTitle());
+        }else {
+            vinyl.setTitle(requestDto.getTitle());
+        }
+
+        if (requestDto.getDescription() == null || requestDto.getDescription().isEmpty()) {
+            vinyl.setDescription(vinyl.getDescription());
+        }else {
+            vinyl.setDescription(requestDto.getDescription());
+        }
+
+        if (requestDto.getArtist() == null || requestDto.getArtist().isEmpty()) {
+            vinyl.setArtist(vinyl.getArtist());
+        }else {
+            vinyl.setArtist(requestDto.getArtist());
+        }
+
+        if (requestDto.getGenre() == null || requestDto.getGenre().isEmpty()) {
+            vinyl.setGenre(vinyl.getGenre());
+        }else {
+            vinyl.setGenre(requestDto.getGenre());
+        }
+
+        if (multipartFile.isEmpty()){
+            vinyl.setImageUrl(vinyl.getImageUrl());
+        }else {
+            s3Service.delete(vinyl);
+            vinyl.setImageUrl(s3Service.upload(multipartFile));
+
+        }
+
+        if (requestDto.getReleasedTime() == null || requestDto.getReleasedTime().isEmpty()) {
+            vinyl.setReleasedYear(vinyl.getReleasedYear());
+            vinyl.setReleasedMonth(vinyl.getReleasedMonth());
+        }else {
+            String releasedYear = requestDto.getReleasedTime().substring(0,4);
+            String releasedMonth = requestDto.getReleasedTime().substring(4,6);
+
+            vinyl.setReleasedYear(releasedYear);
+            vinyl.setReleasedMonth(releasedMonth);
+        }
+
+        return ResponseDto.success(
+                VinylResponseDto.builder()
+                        .id(vinyl.getId())
+                        .title(vinyl.getTitle())
+                        .description(vinyl.getDescription())
+                        .artist(vinyl.getArtist())
+                        .genre(vinyl.getGenre())
+                        .imageUrl(vinyl.getImageUrl())
+                        .releasedYear(vinyl.getReleasedYear())
+                        .releasedMonth(vinyl.getReleasedMonth())
+                        .createdAt(vinyl.getCreatedAt())
+                        .modifiedAt(vinyl.getModifiedAt())
+                        .build()
+        );
     }
 
 
