@@ -1,5 +1,6 @@
 package com.example.ProJectLP.service;
 
+import com.example.ProJectLP.S3Service;
 import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
@@ -11,8 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.IOException;
 
 
 @RequiredArgsConstructor
@@ -21,9 +23,10 @@ public class VinylService {
 
     private final VinylRepository vinylRepository;
     private final TokenProvider tokenProvider;
+    private final S3Service s3Service;
 
     @Transactional
-    public ResponseDto<?> uploadVinyl(VinylRequestDto requestDto, HttpServletRequest request) {
+    public ResponseDto<?> uploadVinyl(VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("400",
                     "Login is required.");
@@ -46,11 +49,15 @@ public class VinylService {
             String releaseYear = requestDto.getReleasedTime().substring(0,4);
             String releaseMonth = requestDto.getReleasedTime().substring(4,6);
 
+
+            String imageUrl = s3Service.upload(multipartFile);
+
             Vinyl vinyl = Vinyl.builder()
                     .title(requestDto.getTitle())
                     .description(requestDto.getDescription())
                     .artist(requestDto.getArtist())
                     .genre(requestDto.getGenre())
+                    .imageUrl(imageUrl)
                     .releasedYear(releaseYear)
                     .releasedMonth(releaseMonth)
                     .build();
@@ -64,6 +71,7 @@ public class VinylService {
                             .description(vinyl.getDescription())
                             .artist(vinyl.getArtist())
                             .genre(vinyl.getGenre())
+                            .imageUrl(vinyl.getImageUrl())
                             .releasedYear(releaseYear)
                             .releasedMonth(releaseMonth)
                             .createdAt(vinyl.getCreatedAt())

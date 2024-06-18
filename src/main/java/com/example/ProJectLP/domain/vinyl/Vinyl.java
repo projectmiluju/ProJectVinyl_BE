@@ -34,7 +34,7 @@ public class Vinyl extends TimeStamped {
     @Column(length = 200)
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private String imageUrl;
 
     @Column(nullable = false)

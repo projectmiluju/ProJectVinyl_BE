@@ -20,6 +20,7 @@ public class VinylResponseDto {
     private String genre;
     private String releasedYear;
     private String releasedMonth;
+    private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }
