@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class VinylService {
     private final TokenProvider tokenProvider;
     private final S3Service s3Service;
 
+    //vinyl 삭제
     @Transactional
     public ResponseDto<?> uploadVinyl(VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         if (null == request.getHeader("RefreshToken")) {
@@ -78,9 +80,42 @@ public class VinylService {
                             .build()
             );
         }
-        else return ResponseDto.fail("400", "관리자가 아닙니다.");
+        else return ResponseDto.fail("400", "Upload Admin Only");
 
     }
+
+    //vinyl 삭제
+    @Transactional
+    public ResponseDto<?> deleteVinyl(Long id, HttpServletRequest request){
+        if (null == request.getHeader("RefreshToken")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("400", "INVALID_TOKEN");
+        }
+
+        Vinyl vinyl = isPresentVinyl(id);
+        if (null == vinyl) {
+            return ResponseDto.fail("400", "Not existing postId");
+        }
+
+        if (!member.isRole()) {
+            return ResponseDto.fail("400", "Deleted Admin Only");
+        }
+
+        vinylRepository.delete(vinyl);
+        return ResponseDto.success("delete success");
+    }
+
+
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
@@ -88,5 +123,11 @@ public class VinylService {
             return null;
         }
         return tokenProvider.getMemberFromAuthentication();
+    }
+
+    @Transactional
+    public Vinyl isPresentVinyl(Long id) {
+        Optional<Vinyl> optionalVinyl = vinylRepository.findById(id);
+        return optionalVinyl.orElse(null);
     }
 }

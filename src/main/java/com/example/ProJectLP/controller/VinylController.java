@@ -17,8 +17,16 @@ public class VinylController {
 
     private final VinylService vinylService;
 
+    //vinyl 등록
     @RequestMapping(value = "/upload/vinyl", method = RequestMethod.POST)
     public ResponseDto<?> uploadVinyl(@RequestPart VinylRequestDto requestDto, @RequestPart MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         return vinylService.uploadVinyl(requestDto, multipartFile, request);
     }
+
+    //vinyl 삭제
+    @RequestMapping(value = "/delete/vinyl/{id}", method = RequestMethod.DELETE)
+    public ResponseDto<?> deleteVinyl(@PathVariable Long id, HttpServletRequest request) {
+        return vinylService.deleteVinyl(id,request);
+    }
+
 }
