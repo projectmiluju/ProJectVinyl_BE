@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -17,6 +18,8 @@ public class VinylResponseDto {
     private String description;
     private String artist;
     private String genre;
+    private String releasedYear;
+    private String releasedMonth;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }

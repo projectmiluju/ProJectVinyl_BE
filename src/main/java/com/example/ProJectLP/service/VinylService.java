@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 
 @RequiredArgsConstructor
 @Service
@@ -40,11 +42,17 @@ public class VinylService {
         }
 
         if (member.isRole()){
+
+            String releaseYear = requestDto.getReleasedTime().substring(0,4);
+            String releaseMonth = requestDto.getReleasedTime().substring(4,6);
+
             Vinyl vinyl = Vinyl.builder()
                     .title(requestDto.getTitle())
                     .description(requestDto.getDescription())
                     .artist(requestDto.getArtist())
                     .genre(requestDto.getGenre())
+                    .releasedYear(releaseYear)
+                    .releasedMonth(releaseMonth)
                     .build();
 
             vinylRepository.save(vinyl);
@@ -56,6 +64,8 @@ public class VinylService {
                             .description(vinyl.getDescription())
                             .artist(vinyl.getArtist())
                             .genre(vinyl.getGenre())
+                            .releasedYear(releaseYear)
+                            .releasedMonth(releaseMonth)
                             .createdAt(vinyl.getCreatedAt())
                             .modifiedAt(vinyl.getModifiedAt())
                             .build()
