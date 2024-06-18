@@ -1,6 +1,5 @@
 package com.example.ProJectLP.service;
 
-import com.example.ProJectLP.S3Service;
 import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
