@@ -1,9 +1,11 @@
 package com.example.ProJectLP.service;
 
+import com.example.ProJectLP.domain.vinyl.Vinyl;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Operations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +44,14 @@ public class S3Service {
         }
 
         return BUCKET + MULTIPART_FILE_URL + key;
+    }
+
+    @Transactional
+    public void delete(Vinyl vinyl) {
+        String imageUrl = vinyl.getImageUrl();
+
+        String s3Url = "s3://" + BUCKET + imageUrl.substring(imageUrl.lastIndexOf("/"));
+        s3Operations.deleteObject(s3Url);
     }
 
 //    @Value("${spring.cloud.aws.s3.bucket}")

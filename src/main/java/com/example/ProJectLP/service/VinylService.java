@@ -111,6 +111,7 @@ public class VinylService {
             return ResponseDto.fail("400", "Deleted Admin Only");
         }
 
+        s3Service.delete(vinyl);
         vinylRepository.delete(vinyl);
         return ResponseDto.success("delete success");
     }
