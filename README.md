@@ -10,13 +10,14 @@ Spring Boot 3.2.0<br>
 Spring Security 6<br>
 Gradle<br>
 Java 17<br>
-AWS<br>
+Spring Data JPA<br>
+Spring Web<br>
 </p>
 
 <p>
+AWS S3<br>
+SWAGGER<br>
 H2 Database<br>
-Spring Data JPA<br>
-Lombok<br>
-Spring Web<br>
-Thymeleaf<br>
+Maria DB<br>
+JWT<br>
 </p>
