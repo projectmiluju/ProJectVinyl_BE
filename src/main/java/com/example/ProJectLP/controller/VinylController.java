@@ -42,4 +42,10 @@ public class VinylController {
         return vinylService.getVinylList();
     }
 
+    //vinyl 상세조회
+    @RequestMapping(value = "/get/vinyl/{id}", method = RequestMethod.GET)
+    public ResponseDto<?> getVinyl(@PathVariable Long id) {
+        return vinylService.getVinyl(id);
+    }
+
 }

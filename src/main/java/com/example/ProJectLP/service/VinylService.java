@@ -218,6 +218,30 @@ public class VinylService {
         return ResponseDto.success(dtoList);
     }
 
+    //vinyl 상세조회
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseDto<?> getVinyl(Long id) {
+        Vinyl vinyl = vinylRepository.findById(id).orElse(null);
+        if (null == vinyl) {
+            return ResponseDto.fail("400", "Not existing vinylId");
+        }
+
+        return ResponseDto.success(
+                VinylResponseDto.builder()
+                        .id(vinyl.getId())
+                        .title(vinyl.getTitle())
+                        .description(vinyl.getDescription())
+                        .artist(vinyl.getArtist())
+                        .genre(vinyl.getGenre())
+                        .imageUrl(vinyl.getImageUrl())
+                        .releasedYear(vinyl.getReleasedYear())
+                        .releasedMonth(vinyl.getReleasedMonth())
+                        .createdAt(vinyl.getCreatedAt())
+                        .modifiedAt(vinyl.getModifiedAt())
+                        .build()
+        );
+    }
+
 
 
     @Transactional
