@@ -6,6 +6,7 @@ import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.dto.request.VinylRequestDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.dto.response.VinylListResponseDto;
 import com.example.ProJectLP.dto.response.VinylResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -200,6 +203,19 @@ public class VinylService {
                         .modifiedAt(vinyl.getModifiedAt())
                         .build()
         );
+    }
+
+    //vinyl 전체조회
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseDto<?> getVinylList() {
+        List<Vinyl> allByOrderByModifiedAtDesc = vinylRepository.findAllByOrderByModifiedAtDesc();
+        List<VinylListResponseDto> dtoList = new ArrayList<>();
+
+        for (Vinyl vinyl : allByOrderByModifiedAtDesc) {
+            VinylListResponseDto vinylListResponseDto = new VinylListResponseDto(vinyl);
+            dtoList.add(vinylListResponseDto);
+        }
+        return ResponseDto.success(dtoList);
     }
 
 

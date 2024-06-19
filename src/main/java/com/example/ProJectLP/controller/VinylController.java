@@ -36,4 +36,10 @@ public class VinylController {
         return vinylService.updateVinyl(id,requestDto,multipartFile,request);
     }
 
+    //vinyl 전체조회
+    @RequestMapping(value = "/get/vinyllist", method = RequestMethod.GET)
+    public ResponseDto<?> getVinyls() {
+        return vinylService.getVinylList();
+    }
+
 }
