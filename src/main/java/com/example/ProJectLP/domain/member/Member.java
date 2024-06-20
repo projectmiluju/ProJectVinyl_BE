@@ -1,13 +1,14 @@
 package com.example.ProJectLP.domain.member;
 
 import com.example.ProJectLP.domain.TimeStamped;
+import com.example.ProJectLP.domain.vinylCommnet.VinylComment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -31,6 +32,9 @@ public class Member extends TimeStamped {
 
     @Column
     private boolean role;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VinylComment> vinylComments;
 
     @Override
     public boolean equals(Object o) {
