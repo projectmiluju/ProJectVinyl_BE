@@ -71,13 +71,15 @@ public class VinylService {
 
             vinylRepository.save(vinyl);
 
-            Song song = Song.builder()
-                    .title(requestDto.getSongs().get(0).getTitle())
-                    .side(requestDto.getSongs().get(0).getSide())
-                    .playingTime(requestDto.getSongs().get(0).getPlayingTime())
+            for (int i = 0; i < requestDto.getSongs().size(); i++) {
+                Song song = Song.builder()
+                    .title(requestDto.getSongs().get(i).getTitle())
+                    .side(requestDto.getSongs().get(i).getSide())
+                    .playingTime(requestDto.getSongs().get(i).getPlayingTime())
                     .vinyl(vinyl).build();
 
-            songRepository.save(song);
+                songRepository.save(song);
+            }
 
             return ResponseDto.success(
                     VinylResponseDto.builder()
