@@ -1,6 +1,7 @@
 package com.example.ProJectLP.domain.vinyl;
 
 import com.example.ProJectLP.domain.TimeStamped;
+import com.example.ProJectLP.domain.song.Song;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Builder
@@ -42,6 +44,10 @@ public class Vinyl extends TimeStamped {
 
     @Column(nullable = false)
     private String releasedMonth;
+
+    @OneToMany(mappedBy = "vinyl", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Song> songs;
+
 
     //추가되어야할 항목
     //좋아요

@@ -2,6 +2,8 @@ package com.example.ProJectLP.service;
 
 import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.domain.member.Member;
+import com.example.ProJectLP.domain.song.Song;
+import com.example.ProJectLP.domain.song.SongRepository;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.dto.request.VinylRequestDto;
@@ -27,6 +29,7 @@ public class VinylService {
     private final VinylRepository vinylRepository;
     private final TokenProvider tokenProvider;
     private final S3Service s3Service;
+    private final SongRepository songRepository;
 
     //vinyl 등록
     @Transactional
@@ -67,6 +70,14 @@ public class VinylService {
                     .build();
 
             vinylRepository.save(vinyl);
+
+            Song song = Song.builder()
+                    .title(requestDto.getSongs().get(0).getTitle())
+                    .side(requestDto.getSongs().get(0).getSide())
+                    .playingTime(requestDto.getSongs().get(0).getPlayingTime())
+                    .vinyl(vinyl).build();
+
+            songRepository.save(song);
 
             return ResponseDto.success(
                     VinylResponseDto.builder()
