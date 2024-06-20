@@ -1,16 +1,24 @@
 package com.example.ProJectLP.controller;
 
+import com.example.ProJectLP.dto.request.VinylCommentRequestDto;
+import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.service.VinylCommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
 public class VinylCommentController {
 
+    private final VinylCommentService vinylCommentService;
 
-//    //바이닐 댓글 등록
-//    @RequestMapping(value = "/upload/vinyl/{vinylid}", method = RequestMethod.POST)
-//    public
+
+    //vinyl 댓글 등록
+    @RequestMapping(value = "/upload/vinyl/{vinylid}/comment", method = RequestMethod.POST)
+    public ResponseDto<?> uploadVinylComment(@PathVariable Long vinylid,
+                                             @RequestBody VinylCommentRequestDto requestDto,
+                                             HttpServletRequest request){
+        return vinylCommentService.uploadVinylComment(vinylid,requestDto,request);
+    }
 }
