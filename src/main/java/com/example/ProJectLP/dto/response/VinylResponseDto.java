@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -21,6 +21,7 @@ public class VinylResponseDto {
     private String releasedYear;
     private String releasedMonth;
     private String imageUrl;
+    private List<SongResponseDto> songs;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }

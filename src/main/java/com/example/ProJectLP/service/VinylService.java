@@ -8,6 +8,7 @@ import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.dto.request.VinylRequestDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.dto.response.SongResponseDto;
 import com.example.ProJectLP.dto.response.VinylListResponseDto;
 import com.example.ProJectLP.dto.response.VinylResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -220,7 +221,7 @@ public class VinylService {
     }
 
     //vinyl 전체조회
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional
     public ResponseDto<?> getVinylList() {
         List<Vinyl> allByOrderByModifiedAtDesc = vinylRepository.findAllByOrderByModifiedAtDesc();
         List<VinylListResponseDto> dtoList = new ArrayList<>();
@@ -233,11 +234,23 @@ public class VinylService {
     }
 
     //vinyl 상세조회
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional
     public ResponseDto<?> getVinyl(Long id) {
         Vinyl vinyl = vinylRepository.findById(id).orElse(null);
         if (null == vinyl) {
             return ResponseDto.fail("400", "Not existing vinylId");
+        }
+
+        List<Song> songs = songRepository.findAllByVinyl(vinyl);
+        List<SongResponseDto> songResponseDtoList = new ArrayList<>();
+        for (Song song : songs) {
+            SongResponseDto songResponseDto = SongResponseDto.builder()
+                    .id(song.getId())
+                    .side(song.getSide())
+                    .title(song.getTitle())
+                    .playingTime(song.getPlayingTime())
+                    .build();
+            songResponseDtoList.add(songResponseDto);
         }
 
         return ResponseDto.success(
@@ -250,6 +263,7 @@ public class VinylService {
                         .imageUrl(vinyl.getImageUrl())
                         .releasedYear(vinyl.getReleasedYear())
                         .releasedMonth(vinyl.getReleasedMonth())
+                        .songs(songResponseDtoList)
                         .createdAt(vinyl.getCreatedAt())
                         .modifiedAt(vinyl.getModifiedAt())
                         .build()
