@@ -30,4 +30,6 @@ public class Song extends TimeStamped {
     @JoinColumn(name = "vinyl_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Vinyl vinyl;
+
+
 }

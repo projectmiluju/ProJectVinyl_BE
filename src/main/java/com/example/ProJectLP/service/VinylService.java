@@ -188,7 +188,6 @@ public class VinylService {
         }else {
             s3Service.delete(vinyl);
             vinyl.setImageUrl(s3Service.upload(multipartFile));
-
         }
 
         if (requestDto.getReleasedTime() == null || requestDto.getReleasedTime().isEmpty()) {
@@ -201,6 +200,8 @@ public class VinylService {
             vinyl.setReleasedYear(releasedYear);
             vinyl.setReleasedMonth(releasedMonth);
         }
+
+        vinyl.setSongs(vinyl.getSongs());
 
         return ResponseDto.success(
                 VinylResponseDto.builder()
