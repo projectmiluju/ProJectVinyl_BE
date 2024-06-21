@@ -21,6 +21,7 @@ public class VinylResponseDto {
     private String releasedYear;
     private String releasedMonth;
     private String imageUrl;
+    private Integer numComments;
     private List<SongResponseDto> songs;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

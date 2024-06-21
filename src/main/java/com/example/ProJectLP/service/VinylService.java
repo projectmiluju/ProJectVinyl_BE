@@ -263,6 +263,7 @@ public class VinylService {
                         .imageUrl(vinyl.getImageUrl())
                         .releasedYear(vinyl.getReleasedYear())
                         .releasedMonth(vinyl.getReleasedMonth())
+                        .numComments(vinyl.getVinylComments().size())
                         .songs(songResponseDtoList)
                         .createdAt(vinyl.getCreatedAt())
                         .modifiedAt(vinyl.getModifiedAt())
