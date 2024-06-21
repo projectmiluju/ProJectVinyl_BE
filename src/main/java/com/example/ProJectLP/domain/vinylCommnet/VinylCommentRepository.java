@@ -8,4 +8,6 @@ import java.util.List;
 public interface VinylCommentRepository extends JpaRepository<VinylComment, Long> {
 
     List<VinylComment> findTop3ByVinylOrderByCreatedAtDesc(Vinyl vinyl);
+
+    List<VinylComment> findByVinylOrderByCreatedAtDesc(Vinyl vinyl);
 }

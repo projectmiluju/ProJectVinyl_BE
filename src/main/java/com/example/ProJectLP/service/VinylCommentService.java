@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -137,6 +139,33 @@ public class VinylCommentService {
                         .build()
         );
     }
+
+    //vinyl 댓글 조회
+    @Transactional
+    public ResponseDto<?> getVinylCommentList(Long vinylId) {
+
+        Vinyl vinyl = vinylRepository.findById(vinylId).orElse(null);
+        if (null == vinyl) {
+            return ResponseDto.fail("400", "Not existing vinylId");
+        }
+
+        List<VinylComment> vinylComments = vinylCommentRepository.findByVinylOrderByCreatedAtDesc(vinyl);
+        if (vinylComments.isEmpty()) {
+            return ResponseDto.fail("400", "Not existing vinylComment");
+        }
+        List<VinylCommentResponseDto> vinylCommentResponseDtoList = new ArrayList<>();
+        for (VinylComment vinylComment : vinylComments) {
+            VinylCommentResponseDto vinylCommentResponseDto = VinylCommentResponseDto.builder()
+                    .id(vinylComment.getId())
+                    .username(vinylComment.getMember().getUsername())
+                    .content(vinylComment.getContent())
+                    .build();
+            vinylCommentResponseDtoList.add(vinylCommentResponseDto);
+        }
+
+        return ResponseDto.success(vinylCommentResponseDtoList);
+    }
+
     @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {

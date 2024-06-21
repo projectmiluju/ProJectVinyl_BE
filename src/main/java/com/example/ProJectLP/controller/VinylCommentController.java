@@ -38,4 +38,10 @@ public class VinylCommentController {
                                              HttpServletRequest request){
         return vinylCommentService.updateVinylComment(vinylId, id, requestDto, request);
     }
+
+    //vinyl 댓글 조회
+    @RequestMapping(value = "/get/vinyl/{vinylId}/commentlist", method = RequestMethod.GET)
+    public ResponseDto<?> getVinylCommentList(@PathVariable Long vinylId){
+        return vinylCommentService.getVinylCommentList(vinylId);
+    }
 }
