@@ -21,6 +21,7 @@ public class VinylListResponseDto {
     private String releasedYear;
     private String releasedMonth;
     private String imageUrl;
+    private Integer numComments;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -33,6 +34,7 @@ public class VinylListResponseDto {
         this.releasedYear = vinyl.getReleasedYear();
         this.releasedMonth = vinyl.getReleasedMonth();
         this.imageUrl = vinyl.getImageUrl();
+        this.numComments = vinyl.getVinylComments().size();
         this.createdAt = vinyl.getCreatedAt();
         this.modifiedAt = vinyl.getModifiedAt();
     }
