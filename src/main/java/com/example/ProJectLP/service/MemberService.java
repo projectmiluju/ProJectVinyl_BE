@@ -3,6 +3,8 @@ package com.example.ProJectLP.service;
 import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.member.MemberRepository;
+import com.example.ProJectLP.domain.refreshtoken.RefreshToken;
+import com.example.ProJectLP.domain.refreshtoken.RefreshTokenRepository;
 import com.example.ProJectLP.dto.TokenDto;
 import com.example.ProJectLP.dto.request.MemberRequestDto;
 import com.example.ProJectLP.dto.request.SignInRequestDto;
@@ -26,6 +28,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     //회원가입
@@ -66,13 +69,20 @@ public class MemberService {
             return ResponseDto.fail("400", "Password error");
         }
 
-
-        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
-        tokenToHeaders(tokenDto, response);
+        if (refreshTokenRepository.findByMember(member).isEmpty()) {
+            TokenDto tokenDto = tokenProvider.generateTokenDto(member);
+            tokenToHeaders(tokenDto, response);
+        }else {
+            deleteRefreshToken(member);
+            if (refreshTokenRepository.findByMember(member).isEmpty()) {
+                TokenDto tokenDto = tokenProvider.generateTokenDto(member);
+                tokenToHeaders(tokenDto, response);
+            }
+        }
 
         return ResponseDto.success(
-                MemberResponseDto.builder().
-                        id(member.getId())
+                MemberResponseDto.builder()
+                        .id(member.getId())
                         .username(member.getUsername())
                         .role(member.isRole())
                         .createdAt(member.getCreatedAt())
@@ -119,6 +129,18 @@ public class MemberService {
         Member member = isPresentMemberByUsername(username);
         if(member == null) return ResponseDto.success(true);
         else return ResponseDto.fail("400","ID already exists");
+    }
+
+    @Transactional(readOnly = true)
+    public RefreshToken isPresentRefreshToken(Member member) {
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
+        return optionalRefreshToken.orElse(null);
+    }
+
+    @Transactional
+    public void deleteRefreshToken(Member member) {
+        RefreshToken refreshToken = isPresentRefreshToken(member);
+        refreshTokenRepository.delete(refreshToken);
     }
 
 }
