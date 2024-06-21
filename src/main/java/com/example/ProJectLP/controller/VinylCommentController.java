@@ -29,4 +29,13 @@ public class VinylCommentController {
                                              HttpServletRequest request){
         return vinylCommentService.deleteVinylComment(vinylId, id, request);
     }
+
+    //vinyl 댓글 수정
+    @RequestMapping(value = "/update/vinyl/{vinylId}/{id}", method = RequestMethod.PUT)
+    public ResponseDto<?> updateVinylComment(@PathVariable Long vinylId,
+                                             @PathVariable Long id,
+                                             @RequestBody VinylCommentRequestDto requestDto,
+                                             HttpServletRequest request){
+        return vinylCommentService.updateVinylComment(vinylId, id, requestDto, request);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.ProJectLP.domain.vinylCommnet;
 import com.example.ProJectLP.domain.TimeStamped;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
+import com.example.ProJectLP.dto.request.VinylCommentRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,10 @@ public class VinylComment extends TimeStamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vinyl_id", nullable = false)
     private Vinyl vinyl;
+
+    public void update(VinylCommentRequestDto vinylCommentRequestDto) {
+        this.content = vinylCommentRequestDto.getContent();
+    }
 
     public boolean validateMember(Member member) {
         return !this.member.equals(member);

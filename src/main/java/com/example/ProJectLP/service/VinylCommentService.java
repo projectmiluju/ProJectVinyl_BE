@@ -72,6 +72,7 @@ public class VinylCommentService {
 
     }
 
+    //vinyl 댓글 삭제
     @Transactional
     public ResponseDto<?> deleteVinylComment(Long vinylId, Long id, HttpServletRequest request) {
         if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
@@ -104,6 +105,38 @@ public class VinylCommentService {
         return ResponseDto.success("Delete Success");
     }
 
+    //vinyl 댓글 수정
+    @Transactional
+    public ResponseDto<?> updateVinylComment(Long vinylId, Long id, VinylCommentRequestDto requestDto, HttpServletRequest request) {
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("400", "INVALID_TOKEN");
+        }
+
+        Vinyl vinyl = isPresentVinyl(vinylId);
+        VinylComment vinylComment = isPresentVinylComment(id);
+        if (null == vinyl || null == vinylComment) {
+            return ResponseDto.fail("400", "Not existing vinylId or vinylCommentId");
+        }
+
+        if (vinylComment.validateMember(member)){
+            return ResponseDto.fail("400", "Update Author Only");
+        }
+
+        vinylComment.update(requestDto);
+        return ResponseDto.success(
+                VinylCommentResponseDto.builder()
+                        .id(vinylComment.getId())
+                        .username(vinylComment.getMember().getUsername())
+                        .content(vinylComment.getContent())
+                        .build()
+        );
+    }
     @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
