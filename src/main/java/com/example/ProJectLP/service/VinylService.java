@@ -6,11 +6,10 @@ import com.example.ProJectLP.domain.song.Song;
 import com.example.ProJectLP.domain.song.SongRepository;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
+import com.example.ProJectLP.domain.vinylCommnet.VinylComment;
+import com.example.ProJectLP.domain.vinylCommnet.VinylCommentRepository;
 import com.example.ProJectLP.dto.request.VinylRequestDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
-import com.example.ProJectLP.dto.response.SongResponseDto;
-import com.example.ProJectLP.dto.response.VinylListResponseDto;
-import com.example.ProJectLP.dto.response.VinylResponseDto;
+import com.example.ProJectLP.dto.response.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,7 @@ public class VinylService {
     private final TokenProvider tokenProvider;
     private final S3Service s3Service;
     private final SongRepository songRepository;
+    private final VinylCommentRepository vinylCommentRepository;
 
     //vinyl 등록
     @Transactional
@@ -253,6 +253,17 @@ public class VinylService {
             songResponseDtoList.add(songResponseDto);
         }
 
+        List<VinylComment> vinylComments = vinylCommentRepository.findTop3ByVinylOrderByCreatedAtDesc(vinyl);
+        List<VinylCommentResponseDto> vinylCommentResponseDtoList = new ArrayList<>();
+        for (VinylComment vinylComment : vinylComments) {
+            VinylCommentResponseDto vinylCommentResponseDto = VinylCommentResponseDto.builder()
+                    .id(vinylComment.getId())
+                    .username(vinylComment.getMember().getUsername())
+                    .content(vinylComment.getContent())
+                    .build();
+            vinylCommentResponseDtoList.add(vinylCommentResponseDto);
+        }
+
         return ResponseDto.success(
                 VinylResponseDto.builder()
                         .id(vinyl.getId())
@@ -265,6 +276,7 @@ public class VinylService {
                         .releasedMonth(vinyl.getReleasedMonth())
                         .numComments(vinyl.getVinylComments().size())
                         .songs(songResponseDtoList)
+                        .vinylComments(vinylCommentResponseDtoList)
                         .createdAt(vinyl.getCreatedAt())
                         .modifiedAt(vinyl.getModifiedAt())
                         .build()
