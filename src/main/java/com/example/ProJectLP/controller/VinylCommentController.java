@@ -15,10 +15,18 @@ public class VinylCommentController {
 
 
     //vinyl 댓글 등록
-    @RequestMapping(value = "/upload/vinyl/{vinylid}/comment", method = RequestMethod.POST)
-    public ResponseDto<?> uploadVinylComment(@PathVariable Long vinylid,
+    @RequestMapping(value = "/upload/vinyl/{vinylId}/comment", method = RequestMethod.POST)
+    public ResponseDto<?> uploadVinylComment(@PathVariable Long vinylId,
                                              @RequestBody VinylCommentRequestDto requestDto,
                                              HttpServletRequest request){
-        return vinylCommentService.uploadVinylComment(vinylid,requestDto,request);
+        return vinylCommentService.uploadVinylComment(vinylId,requestDto,request);
+    }
+
+    //vinyl 댓글 삭제
+    @RequestMapping(value = "/delete/vinyl/{vinylId}/{id}", method = RequestMethod.DELETE)
+    public ResponseDto<?> deleteVinylComment(@PathVariable Long vinylId,
+                                             @PathVariable Long id,
+                                             HttpServletRequest request){
+        return vinylCommentService.deleteVinylComment(vinylId, id, request);
     }
 }

@@ -29,7 +29,7 @@ public class VinylCommentService {
 
     //vinyl 댓글 등록
     @Transactional
-    public ResponseDto<?> uploadVinylComment(Long vinylid, VinylCommentRequestDto requestDto, HttpServletRequest request) {
+    public ResponseDto<?> uploadVinylComment(Long vinylId, VinylCommentRequestDto requestDto, HttpServletRequest request) {
 
         if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("400",
@@ -47,7 +47,7 @@ public class VinylCommentService {
             return ResponseDto.fail("400", "INVALID_TOKEN");
         }
 
-        Vinyl vinyl = isPresentVinyl(vinylid);
+        Vinyl vinyl = isPresentVinyl(vinylId);
 
         if (null == vinyl) {
             return ResponseDto.fail("400", "Not existing vinylId");
@@ -73,6 +73,38 @@ public class VinylCommentService {
     }
 
     @Transactional
+    public ResponseDto<?> deleteVinylComment(Long vinylId, Long id, HttpServletRequest request) {
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("400", "INVALID_TOKEN");
+        }
+
+        Vinyl vinyl = isPresentVinyl(vinylId);
+        VinylComment vinylComment = isPresentVinylComment(id);
+        if (null == vinyl || null == vinylComment) {
+            return ResponseDto.fail("400", "Not existing vinylId or vinylCommentId");
+        }
+
+        if (vinylComment.validateMember(member)){
+
+            if (member.isRole()){
+                vinylCommentRepository.delete(vinylComment);
+                return ResponseDto.success("Delete Success");
+            }
+
+            return ResponseDto.fail("400", "Delete Author Only");
+        }
+
+        vinylCommentRepository.delete(vinylComment);
+        return ResponseDto.success("Delete Success");
+    }
+
+    @Transactional
     public Member validateMember(HttpServletRequest request) {
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
@@ -84,5 +116,11 @@ public class VinylCommentService {
     public Vinyl isPresentVinyl(Long id) {
         Optional<Vinyl> optionalVinyl = vinylRepository.findById(id);
         return optionalVinyl.orElse(null);
+    }
+
+    @Transactional
+    public VinylComment isPresentVinylComment(Long id) {
+        Optional<VinylComment> optionalVinylComment = vinylCommentRepository.findById(id);
+        return optionalVinylComment.orElse(null);
     }
 }

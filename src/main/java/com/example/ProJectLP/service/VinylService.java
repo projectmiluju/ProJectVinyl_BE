@@ -125,12 +125,12 @@ public class VinylService {
         }
 
         if (!member.isRole()) {
-            return ResponseDto.fail("400", "Deleted Admin Only");
+            return ResponseDto.fail("400", "Delete Admin Only");
         }
 
         s3Service.delete(vinyl);
         vinylRepository.delete(vinyl);
-        return ResponseDto.success("delete success");
+        return ResponseDto.success("Delete Success");
     }
 
     //vinyl 업데이트

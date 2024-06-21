@@ -28,4 +28,8 @@ public class VinylComment extends TimeStamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vinyl_id", nullable = false)
     private Vinyl vinyl;
+
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
 }
