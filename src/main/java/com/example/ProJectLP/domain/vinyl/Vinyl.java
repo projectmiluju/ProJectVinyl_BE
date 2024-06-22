@@ -3,6 +3,7 @@ package com.example.ProJectLP.domain.vinyl;
 import com.example.ProJectLP.domain.TimeStamped;
 import com.example.ProJectLP.domain.song.Song;
 import com.example.ProJectLP.domain.vinylComment.VinylComment;
+import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,9 +50,8 @@ public class Vinyl extends TimeStamped {
     @OneToMany(mappedBy = "vinyl", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<VinylComment> vinylComments;
 
+    @OneToMany(mappedBy = "vinyl", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<VinylLike> vinylLikes;
 
-    //추가되어야할 항목
-    //좋아요
-    //댓글
 
 }

@@ -2,6 +2,7 @@ package com.example.ProJectLP.domain.member;
 
 import com.example.ProJectLP.domain.TimeStamped;
 import com.example.ProJectLP.domain.vinylComment.VinylComment;
+import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,9 @@ public class Member extends TimeStamped {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VinylComment> vinylComments;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VinylLike> vinylLikes;
 
     @Override
     public boolean equals(Object o) {
