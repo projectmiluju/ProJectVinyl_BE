@@ -4,7 +4,6 @@ import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
-import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import com.example.ProJectLP.domain.vinylLike.VinylLikeRepository;
 import com.example.ProJectLP.dto.response.ResponseDto;
@@ -33,13 +32,11 @@ public class VinylLikeService {
         }
 
         Member member = validateMember(request);
-
         if (null == member) {
             return ResponseDto.fail("400", "INVALID_TOKEN");
         }
 
         Vinyl vinyl = isPresentVinyl(vinylId);
-
         if (null == vinyl) {
             return ResponseDto.fail("400", "Not existing vinylId");
         }
@@ -57,10 +54,32 @@ public class VinylLikeService {
         return ResponseDto.success("Successfully liked vinyl");
     }
 
-//    @Transactional
-//    public ResponseDto<?> unlikeVinyl(Long vinylId, HttpServletRequest request){
-//
-//    }
+    //vinyl 좋아요 삭제
+    @Transactional
+    public ResponseDto<?> unlikeVinyl(Long vinylId, HttpServletRequest request){
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("400",
+                    "Login is required.");
+        }
+
+        Member member = validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail("400", "INVALID_TOKEN");
+        }
+
+        Vinyl vinyl = isPresentVinyl(vinylId);
+        if (null == vinyl) {
+            return ResponseDto.fail("400", "Not existing vinylId");
+        }
+
+        if (vinylLikeRepository.findByMemberIdAndVinylId(member.getId(),vinyl.getId()) == null) {
+            return ResponseDto.fail("400", "Not existing liked vinylId");
+        }
+
+        vinylLikeRepository.delete(vinylLikeRepository.findByMemberIdAndVinylId(member.getId(),vinyl.getId()));
+
+        return ResponseDto.success("Successfully unliked vinyl");
+    }
 
 
     @Transactional

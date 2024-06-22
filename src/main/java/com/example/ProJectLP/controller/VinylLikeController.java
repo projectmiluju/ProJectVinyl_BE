@@ -25,8 +25,8 @@ public class VinylLikeController {
 
 
     //vinyl 좋아요 삭제
-//    @RequestMapping(value = "/delete/vinyl/{vinylId}/like", method = RequestMethod.DELETE)
-//    public ResponseDto<?> unlikeVinyl(@PathVariable Long vinylId, HttpServletRequest request) {
-//        return vinylLikeService.unlikeVinyl(vinylId, request);
-//    }
+    @RequestMapping(value = "/delete/vinyl/{vinylId}/like", method = RequestMethod.DELETE)
+    public ResponseDto<?> unlikeVinyl(@PathVariable Long vinylId, HttpServletRequest request) {
+        return vinylLikeService.unlikeVinyl(vinylId, request);
+    }
 }
