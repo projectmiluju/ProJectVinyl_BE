@@ -95,10 +95,4 @@ public class VinylLikeService {
         Optional<Vinyl> optionalVinyl = vinylRepository.findById(id);
         return optionalVinyl.orElse(null);
     }
-
-    @Transactional
-    public VinylLike isPresentVinylLike(Long id) {
-        Optional<VinylLike> optionalVinylLike = vinylLikeRepository.findById(id);
-        return optionalVinylLike.orElse(null);
-    }
 }

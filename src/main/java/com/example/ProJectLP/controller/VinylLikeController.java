@@ -1,6 +1,5 @@
 package com.example.ProJectLP.controller;
 
-import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.VinylLikeService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class VinylLikeController {
 
     private final VinylLikeService vinylLikeService;
-    private final TokenProvider tokenProvider;
-
     //vinyl 좋아요 등록
     @RequestMapping(value = "/upload/vinyl/{vinylId}/like", method = RequestMethod.POST)
     public ResponseDto<?> likeVinyl(@PathVariable Long vinylId, HttpServletRequest request) {
