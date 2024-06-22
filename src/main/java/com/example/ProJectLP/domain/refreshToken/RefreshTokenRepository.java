@@ -1,4 +1,4 @@
-package com.example.ProJectLP.domain.refreshtoken;
+package com.example.ProJectLP.domain.refreshToken;
 
 import com.example.ProJectLP.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

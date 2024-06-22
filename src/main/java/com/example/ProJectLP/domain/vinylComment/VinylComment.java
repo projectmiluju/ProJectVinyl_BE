@@ -1,4 +1,4 @@
-package com.example.ProJectLP.domain.vinylCommnet;
+package com.example.ProJectLP.domain.vinylComment;
 
 import com.example.ProJectLP.domain.TimeStamped;
 import com.example.ProJectLP.domain.member.Member;

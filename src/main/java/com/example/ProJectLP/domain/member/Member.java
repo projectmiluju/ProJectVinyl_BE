@@ -1,7 +1,7 @@
 package com.example.ProJectLP.domain.member;
 
 import com.example.ProJectLP.domain.TimeStamped;
-import com.example.ProJectLP.domain.vinylCommnet.VinylComment;
+import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

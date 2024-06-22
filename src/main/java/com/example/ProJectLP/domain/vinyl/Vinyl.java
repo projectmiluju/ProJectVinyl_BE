@@ -2,7 +2,7 @@ package com.example.ProJectLP.domain.vinyl;
 
 import com.example.ProJectLP.domain.TimeStamped;
 import com.example.ProJectLP.domain.song.Song;
-import com.example.ProJectLP.domain.vinylCommnet.VinylComment;
+import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import jakarta.persistence.*;
 import lombok.*;
 
