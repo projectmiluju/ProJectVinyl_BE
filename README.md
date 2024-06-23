@@ -20,4 +20,6 @@ SWAGGER<br>
 H2 Database<br>
 Maria DB<br>
 JWT<br>
+Redis<br>
+Docker<br>
 </p>
