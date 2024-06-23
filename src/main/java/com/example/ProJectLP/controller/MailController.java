@@ -1,13 +1,11 @@
 package com.example.ProJectLP.controller;
 
-import com.example.ProJectLP.dto.EmailCheckDto;
 import com.example.ProJectLP.dto.request.EmailRequestDto;
+import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.MailSendService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -15,20 +13,9 @@ public class MailController {
 
     private final MailSendService mailService;
 
-    @PostMapping("/mailSend")
-    public String mailSend(@RequestBody @Valid EmailRequestDto emailDto){
-        System.out.println("이메일 인증 이메일 :"+emailDto.getEmail());
+    @RequestMapping(value = "/api/email", method = RequestMethod.POST)
+    public ResponseDto<?> mailSend(@RequestBody @Valid EmailRequestDto emailDto){
         return mailService.joinEmail(emailDto.getEmail());
     }
 
-    @PostMapping("/mailauthCheck")
-    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto){
-        Boolean Checked=mailService.CheckAuthNum(emailCheckDto.getEmail(),emailCheckDto.getAuthNum());
-        if(Checked){
-            return "ok";
-        }
-        else{
-            throw new NullPointerException("뭔가 잘못!");
-        }
-    }
 }

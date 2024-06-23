@@ -15,6 +15,7 @@ public class MemberResponseDto {
     private Long id;
     private String username;
     private boolean role;
+    private boolean emailCheck;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }

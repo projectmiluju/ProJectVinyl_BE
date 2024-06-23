@@ -34,6 +34,9 @@ public class Member extends TimeStamped {
     @Column
     private boolean role;
 
+    @Column
+    private boolean emailCheck;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VinylComment> vinylComments;
 

@@ -3,6 +3,7 @@ package com.example.ProJectLP.service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import com.example.ProJectLP.dto.response.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -32,7 +33,7 @@ public class MailSendService {
     }
 
     //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성합니다.
-    public String joinEmail(String email) {
+    public ResponseDto<?> joinEmail(String email) {
         makeRandomNumber();
         String setFrom = "dionisos198@naver.com"; // email-config에 설정한 자신의 이메일 주소를 입력
         String toMail = email;
@@ -44,7 +45,7 @@ public class MailSendService {
                         "<br>" +
                         "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
         mailSend(setFrom, toMail, title, content);
-        return Integer.toString(authNumber);
+        return ResponseDto.success(Integer.toString(authNumber));
     }
 
     //이메일을 전송합니다.
@@ -66,7 +67,7 @@ public class MailSendService {
 
     }
 
-    public boolean CheckAuthNum(String email,String authNum){
+    public boolean emailCheck(String email,String authNum){
         if(redisUtil.getData(authNum)==null){
             return false;
         }

@@ -29,6 +29,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final MailSendService mailSendService;
 
 
     //회원가입
@@ -39,9 +40,15 @@ public class MemberService {
                     "Password and Confirm Password do not match");
         }
 
+        boolean emailCheck = mailSendService.emailCheck(requestDto.getEmail(), requestDto.getAuthNum());
+        if (!emailCheck){
+            return ResponseDto.fail("400", "Check your email and auth num");
+        }
+
         Member member = Member.builder()
                 .username(requestDto.getUsername())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
+                .emailCheck(emailCheck)
                 .build();
         memberRepository.save(member);
         return ResponseDto.success(
@@ -49,6 +56,7 @@ public class MemberService {
                         .id(member.getId())
                         .username(member.getUsername())
                         .role(member.isRole())
+                        .emailCheck(member.isEmailCheck())
                         .createdAt(member.getCreatedAt())
                         .modifiedAt(member.getModifiedAt())
                         .build()
@@ -67,6 +75,10 @@ public class MemberService {
 
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
             return ResponseDto.fail("400", "Password error");
+        }
+
+        if (!member.isEmailCheck()){
+            return ResponseDto.fail("400", "Check your email and auth num");
         }
 
         if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {

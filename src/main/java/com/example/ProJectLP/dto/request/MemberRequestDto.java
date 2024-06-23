@@ -1,5 +1,6 @@
 package com.example.ProJectLP.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +19,11 @@ public class MemberRequestDto {
 
     @NotBlank
     private String passwordConfirm;
+
+    @NotBlank
+    @Email
+    private String email;
+
+    @NotBlank
+    private String authNum;
 }
