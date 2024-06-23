@@ -1,28 +1,22 @@
 package com.example.ProJectLP.domain.refreshToken;
 
 import com.example.ProJectLP.domain.TimeStamped;
-import com.example.ProJectLP.domain.member.Member;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Builder
+@RedisHash(value = "refreshToken", timeToLive = 14400)
 public class RefreshToken extends TimeStamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String refreshToken;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Long memberId;
 
-    @Column(nullable = false)
-    private String token;
+    public RefreshToken(String refreshToken, Long memberId) {
+        this.refreshToken = refreshToken;
+        this.memberId = memberId;
+    }
+
 }

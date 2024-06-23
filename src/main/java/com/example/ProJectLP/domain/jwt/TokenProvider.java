@@ -59,11 +59,7 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        RefreshToken refreshTokenObject = RefreshToken.builder()
-                .id(member.getId())
-                .member(member)
-                .token(refreshToken)
-                .build();
+        RefreshToken refreshTokenObject = new RefreshToken(refreshToken, member.getId());
 
         refreshTokenRepository.save(refreshTokenObject);
 
@@ -103,7 +99,7 @@ public class TokenProvider {
 
     @Transactional(readOnly = true)
     public RefreshToken isPresentRefreshToken(Member member) {
-        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMemberId(member.getId());
         return optionalRefreshToken.orElse(null);
     }
 

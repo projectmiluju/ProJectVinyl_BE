@@ -69,12 +69,12 @@ public class MemberService {
             return ResponseDto.fail("400", "Password error");
         }
 
-        if (refreshTokenRepository.findByMember(member).isEmpty()) {
+        if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(member);
             tokenToHeaders(tokenDto, response);
         }else {
             deleteRefreshToken(member);
-            if (refreshTokenRepository.findByMember(member).isEmpty()) {
+            if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
                 TokenDto tokenDto = tokenProvider.generateTokenDto(member);
                 tokenToHeaders(tokenDto, response);
             }
@@ -133,7 +133,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public RefreshToken isPresentRefreshToken(Member member) {
-        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMemberId(member.getId());
         return optionalRefreshToken.orElse(null);
     }
 
