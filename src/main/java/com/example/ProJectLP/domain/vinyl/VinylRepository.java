@@ -12,5 +12,4 @@ public interface VinylRepository extends JpaRepository<Vinyl, Long> {
     @Query(value = "SELECT b FROM Vinyl b WHERE b.title LIKE %:keyword%")
     List<Vinyl> findByTitle(String keyword);
 
-    List<Vinyl> findTop10ByOrderByVinylLikesAsc();
 }
