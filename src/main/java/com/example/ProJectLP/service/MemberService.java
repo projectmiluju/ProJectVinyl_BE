@@ -97,6 +97,7 @@ public class MemberService {
                         .id(member.getId())
                         .username(member.getUsername())
                         .role(member.isRole())
+                        .emailCheck(member.isEmailCheck())
                         .createdAt(member.getCreatedAt())
                         .modifiedAt(member.getModifiedAt())
                         .build()
