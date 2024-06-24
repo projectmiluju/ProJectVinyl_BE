@@ -13,10 +13,19 @@ public class RankController {
 
     private final RankService rankService;
 
+    // 전체 기간 좋아요
     @RequestMapping(value = "/rank/vinyl", method = RequestMethod.GET)
     public ResponseDto<?> getRankVinyl() {
 
         return rankService.rankVinyl();
     }
+
+    // 특정 기간 좋아요
+    @RequestMapping(value = "/rank/vinyl/month", method = RequestMethod.GET)
+    public ResponseDto<?> getRankVinylMonth() {
+
+        return rankService.rankVinylMonth();
+    }
+
 
 }
