@@ -44,6 +44,9 @@ public class Vinyl extends TimeStamped {
     @Column(nullable = false)
     private String releasedMonth;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
+
     @OneToMany(mappedBy = "vinyl", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Song> songs;
 

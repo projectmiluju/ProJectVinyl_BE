@@ -10,7 +10,9 @@ import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylComment.VinylCommentRepository;
 import com.example.ProJectLP.dto.request.VinylRequestDto;
 import com.example.ProJectLP.dto.response.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +38,8 @@ public class VinylService {
     private final S3Service s3Service;
     private final SongRepository songRepository;
     private final VinylCommentRepository vinylCommentRepository;
+
+    private final static String VIEWCOOKIENAME = "alreadyViewCookie";
 
     //vinyl 등록
     @Transactional
@@ -297,6 +303,52 @@ public class VinylService {
                         .build()
         );
     }
+
+    @Transactional
+    public int updateView(Long id, HttpServletRequest request, HttpServletResponse response) {
+
+        Cookie[] cookies = request.getCookies();
+        boolean checKCookie = false;
+        int result = 0;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(VIEWCOOKIENAME+id)) {
+                    checKCookie = true;
+                }
+            }
+            if (!checKCookie) {
+                Cookie newCookie = createCookieForForNotOverlap(id);
+                response.addCookie(newCookie);
+                result = vinylRepository.updateView(id);
+            }
+        }else {
+            Cookie newCookie = createCookieForForNotOverlap(id);
+            response.addCookie(newCookie);
+            result = vinylRepository.updateView(id);
+        }
+        return result;
+    }
+
+    /*
+     * 조회수 중복 방지를 위한 쿠키 생성 메소드
+     * @param cookie
+     * @return
+     * */
+    private Cookie createCookieForForNotOverlap(Long postId) {
+        Cookie cookie = new Cookie(VIEWCOOKIENAME+postId, String.valueOf(postId));
+        cookie.setComment("조회수 중복 증가 방지 쿠키");// 쿠키 용도 설명 기재
+        cookie.setMaxAge(getRemainSecondForTomorrow()); 	// 하루를 준다.
+        cookie.setHttpOnly(true);				// 서버에서만 조작 가능
+        return cookie;
+    }
+
+    // 다음 날 정각까지 남은 시간(초)
+    private int getRemainSecondForTomorrow() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1L).truncatedTo(ChronoUnit.DAYS);
+        return (int) now.until(tomorrow, ChronoUnit.SECONDS);
+    }
+
 
 
 

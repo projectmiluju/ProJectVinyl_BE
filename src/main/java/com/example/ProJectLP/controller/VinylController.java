@@ -4,6 +4,7 @@ import com.example.ProJectLP.dto.request.VinylRequestDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.VinylService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +47,8 @@ public class VinylController {
 
     //vinyl 상세조회
     @RequestMapping(value = "/get/vinyl/{id}", method = RequestMethod.GET)
-    public ResponseDto<?> getVinyl(@PathVariable Long id) {
+    public ResponseDto<?> getVinyl(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+        vinylService.updateView(id, request, response);
         return vinylService.getVinyl(id);
     }
 
