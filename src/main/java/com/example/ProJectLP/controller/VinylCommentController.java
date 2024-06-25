@@ -41,7 +41,12 @@ public class VinylCommentController {
 
     //vinyl 댓글 조회
     @RequestMapping(value = "/get/vinyl/{vinylId}/commentlist", method = RequestMethod.GET)
-    public ResponseDto<?> getVinylCommentList(@PathVariable Long vinylId){
-        return vinylCommentService.getVinylCommentList(vinylId);
+    public ResponseDto<?> getVinylCommentList(@PathVariable Long vinylId,
+                                              @RequestParam("pageNum") int page,
+                                              @RequestParam("pageLimit") int limit){
+
+        page = page -1;
+
+        return vinylCommentService.getVinylCommentList(vinylId, page, limit);
     }
 }

@@ -7,6 +7,7 @@ import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylComment.VinylCommentRepository;
 import com.example.ProJectLP.dto.request.VinylCommentRequestDto;
+import com.example.ProJectLP.dto.response.PageVinylCommentResponseDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.dto.response.VinylCommentResponseDto;
 
@@ -15,6 +16,9 @@ import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -142,14 +146,16 @@ public class VinylCommentService {
 
     //vinyl 댓글 조회
     @Transactional
-    public ResponseDto<?> getVinylCommentList(Long vinylId) {
+    public ResponseDto<?> getVinylCommentList(Long vinylId, int page, int limit) {
+
+        Pageable pageable = PageRequest.of(page, limit);
 
         Vinyl vinyl = vinylRepository.findById(vinylId).orElse(null);
         if (null == vinyl) {
             return ResponseDto.fail("400", "Not existing vinylId");
         }
 
-        List<VinylComment> vinylComments = vinylCommentRepository.findByVinylOrderByCreatedAtDesc(vinyl);
+        Page<VinylComment> vinylComments = vinylCommentRepository.findByVinylOrderByCreatedAtDesc(vinyl,pageable);
         if (vinylComments.isEmpty()) {
             return ResponseDto.fail("400", "Not existing vinylComment");
         }
@@ -163,7 +169,13 @@ public class VinylCommentService {
             vinylCommentResponseDtoList.add(vinylCommentResponseDto);
         }
 
-        return ResponseDto.success(vinylCommentResponseDtoList);
+        PageVinylCommentResponseDto pageVinylCommentResponseDto = PageVinylCommentResponseDto.builder()
+                .currPage(vinylComments.getNumber()+1)
+                .totalPage(vinylComments.getTotalPages())
+                .currContent(vinylComments.getNumberOfElements())
+                .vinylCommentList(vinylCommentResponseDtoList).build();
+
+        return ResponseDto.success(pageVinylCommentResponseDto);
     }
 
     @Transactional
