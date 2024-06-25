@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
 
 
@@ -38,8 +39,9 @@ public class VinylController {
 
     //vinyl 전체조회
     @RequestMapping(value = "/get/vinyllist", method = RequestMethod.GET)
-    public ResponseDto<?> getVinyls() {
-        return vinylService.getVinylList();
+    public ResponseDto<?> getVinyls(@RequestParam("pageNum") int page, @RequestParam("pageLimit") int limit) {
+        page = page -1;
+        return vinylService.getVinylList(page,limit);
     }
 
     //vinyl 상세조회

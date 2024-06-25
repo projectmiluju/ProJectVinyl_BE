@@ -13,6 +13,9 @@ import com.example.ProJectLP.dto.response.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -222,15 +225,26 @@ public class VinylService {
 
     //vinyl 전체조회
     @Transactional
-    public ResponseDto<?> getVinylList() {
-        List<Vinyl> allByOrderByModifiedAtDesc = vinylRepository.findAllByOrderByModifiedAtDesc();
+    public ResponseDto<?> getVinylList(int page, int limit) {
+
+        Pageable pageable = PageRequest.of(page, limit);
+
+        Page<Vinyl> allByOrderByModifiedAtDesc = vinylRepository.findAllByOrderByModifiedAtDesc(pageable);
         List<VinylListResponseDto> dtoList = new ArrayList<>();
 
         for (Vinyl vinyl : allByOrderByModifiedAtDesc) {
             VinylListResponseDto vinylListResponseDto = new VinylListResponseDto(vinyl);
             dtoList.add(vinylListResponseDto);
         }
-        return ResponseDto.success(dtoList);
+
+        PageResponseDto pageResponseDto = PageResponseDto.builder()
+                .currPage(allByOrderByModifiedAtDesc.getNumber()+1)
+                .totalPage(allByOrderByModifiedAtDesc.getTotalPages())
+                .currContent(allByOrderByModifiedAtDesc.getNumberOfElements())
+                .vinylList(dtoList)
+                .build();
+
+        return ResponseDto.success(pageResponseDto);
     }
 
     //vinyl 상세조회
