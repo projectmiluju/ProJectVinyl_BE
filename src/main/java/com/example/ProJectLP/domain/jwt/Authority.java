@@ -1,4 +1,4 @@
-package com.example.ProJectLP;
+package com.example.ProJectLP.domain.jwt;
 
 public enum Authority {
     ROLE_MEMBER,

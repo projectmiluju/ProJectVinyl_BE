@@ -1,6 +1,6 @@
 package com.example.ProJectLP.service;
 
-import com.example.ProJectLP.domain.UserDetailsImpl;
+import com.example.ProJectLP.domain.jwt.UserDetailsImpl;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;

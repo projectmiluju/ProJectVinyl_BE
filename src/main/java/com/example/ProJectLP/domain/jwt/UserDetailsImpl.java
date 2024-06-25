@@ -1,6 +1,5 @@
-package com.example.ProJectLP.domain;
+package com.example.ProJectLP.domain.jwt;
 
-import com.example.ProJectLP.Authority;
 import com.example.ProJectLP.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;

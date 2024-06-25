@@ -1,7 +1,5 @@
 package com.example.ProJectLP.domain.jwt;
 
-import com.example.ProJectLP.Authority;
-import com.example.ProJectLP.domain.UserDetailsImpl;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.refreshToken.RefreshToken;
 import com.example.ProJectLP.domain.refreshToken.RefreshTokenRepository;
