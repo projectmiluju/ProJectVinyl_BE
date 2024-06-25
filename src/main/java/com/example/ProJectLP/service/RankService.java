@@ -35,6 +35,7 @@ public class RankService {
                         .artist(vinyl.getArtist())
                         .imageUrl(vinyl.getImageUrl())
                         .numLikes(vinyl.getVinylLikes().size())
+                        .numView(vinyl.getView())
                         .build();
                 dtoList.add(dto);
             }
@@ -50,6 +51,7 @@ public class RankService {
                     .title(dtoList.get(i).getTitle())
                     .artist(dtoList.get(i).getArtist())
                     .numLikes(dtoList.get(i).getNumLikes())
+                    .numView(dtoList.get(i).getNumView())
                     .imageUrl(dtoList.get(i).getImageUrl())
                     .build();
             rankDtoList.add(rankDto);
@@ -73,6 +75,7 @@ public class RankService {
                         .artist(vinyl.getArtist())
                         .imageUrl(vinyl.getImageUrl())
                         .numLikes(vinylLikes.size())
+                        .numView(vinyl.getView())
                         .build();
                 dtoList.add(dto);
             }
@@ -88,6 +91,7 @@ public class RankService {
                     .title(dtoList.get(i).getTitle())
                     .artist(dtoList.get(i).getArtist())
                     .numLikes(dtoList.get(i).getNumLikes())
+                    .numView(dtoList.get(i).getNumView())
                     .imageUrl(dtoList.get(i).getImageUrl())
                     .build();
             rankDtoList.add(rankDto);

@@ -23,6 +23,7 @@ public class VinylListResponseDto {
     private String imageUrl;
     private Integer numComments;
     private Integer numLikes;
+    private Integer numView;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -37,6 +38,7 @@ public class VinylListResponseDto {
         this.imageUrl = vinyl.getImageUrl();
         this.numComments = vinyl.getVinylComments().size();
         this.numLikes = vinyl.getVinylLikes().size();
+        this.numView = vinyl.getView();
         this.createdAt = vinyl.getCreatedAt();
         this.modifiedAt = vinyl.getModifiedAt();
     }

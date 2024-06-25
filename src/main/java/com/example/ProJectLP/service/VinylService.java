@@ -296,6 +296,7 @@ public class VinylService {
                         .releasedMonth(vinyl.getReleasedMonth())
                         .numComments(vinyl.getVinylComments().size())
                         .numLikes(vinyl.getVinylLikes().size())
+                        .numView(vinyl.getView())
                         .songs(songResponseDtoList)
                         .vinylComments(vinylCommentResponseDtoList)
                         .createdAt(vinyl.getCreatedAt())

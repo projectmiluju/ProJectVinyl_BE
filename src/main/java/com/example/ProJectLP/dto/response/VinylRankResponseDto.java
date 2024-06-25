@@ -16,4 +16,5 @@ public class VinylRankResponseDto {
     private String artist;
     private String imageUrl;
     private Integer numLikes;
+    private Integer numView;
 }

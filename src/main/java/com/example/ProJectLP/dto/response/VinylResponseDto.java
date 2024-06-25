@@ -23,6 +23,7 @@ public class VinylResponseDto {
     private String imageUrl;
     private Integer numComments;
     private Integer numLikes;
+    private Integer numView;
     private List<SongResponseDto> songs;
     private List<VinylCommentResponseDto> vinylComments;
     private LocalDateTime createdAt;
