@@ -16,7 +16,11 @@ public class SearchController {
 
     //vinyl 검색
     @RequestMapping(value = "/search/vinyl", method = RequestMethod.GET)
-    public ResponseDto<?> searchVinyl(@RequestParam String keyword) {
-        return searchService.searchVinyl(keyword);
+    public ResponseDto<?> searchVinyl(@RequestParam String keyword,
+                                      @RequestParam("pageNum") int page,
+                                      @RequestParam("pageLimit") int limit) {
+
+        page = page -1;
+        return searchService.searchVinyl(keyword, page, limit);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageResponseDto {
+public class PageVinylResponseDto {
 
     private int currPage;
     private int totalPage;

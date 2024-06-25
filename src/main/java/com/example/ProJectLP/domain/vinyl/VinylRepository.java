@@ -14,6 +14,8 @@ public interface VinylRepository extends JpaRepository<Vinyl, Long> {
     Page<Vinyl> findAllByOrderByModifiedAtDesc(Pageable pageable);
 
     @Query(value = "SELECT b FROM Vinyl b WHERE b.title LIKE %:keyword%")
-    List<Vinyl> findByTitle(String keyword);
+    Page<Vinyl> findByTitle(String keyword, Pageable pageable);
+//    List<Vinyl> findByTitle(String keyword);
+
 
 }

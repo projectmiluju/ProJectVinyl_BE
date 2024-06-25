@@ -237,14 +237,14 @@ public class VinylService {
             dtoList.add(vinylListResponseDto);
         }
 
-        PageResponseDto pageResponseDto = PageResponseDto.builder()
+        PageVinylResponseDto pageVinylResponseDto = PageVinylResponseDto.builder()
                 .currPage(allByOrderByModifiedAtDesc.getNumber()+1)
                 .totalPage(allByOrderByModifiedAtDesc.getTotalPages())
                 .currContent(allByOrderByModifiedAtDesc.getNumberOfElements())
                 .vinylList(dtoList)
                 .build();
 
-        return ResponseDto.success(pageResponseDto);
+        return ResponseDto.success(pageVinylResponseDto);
     }
 
     //vinyl 상세조회
