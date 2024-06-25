@@ -5,7 +5,7 @@ import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.member.MemberRepository;
 import com.example.ProJectLP.domain.refreshToken.RefreshToken;
 import com.example.ProJectLP.domain.refreshToken.RefreshTokenRepository;
-import com.example.ProJectLP.dto.TokenDto;
+import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.request.MemberRequestDto;
 import com.example.ProJectLP.dto.request.SignInRequestDto;
 import com.example.ProJectLP.dto.response.MemberResponseDto;

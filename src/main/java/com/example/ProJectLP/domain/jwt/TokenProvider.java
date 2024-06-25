@@ -5,7 +5,7 @@ import com.example.ProJectLP.domain.UserDetailsImpl;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.refreshToken.RefreshToken;
 import com.example.ProJectLP.domain.refreshToken.RefreshTokenRepository;
-import com.example.ProJectLP.dto.TokenDto;
+import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
