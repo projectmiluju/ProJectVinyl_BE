@@ -14,17 +14,24 @@ public class RankController {
     private final RankService rankService;
 
     // 전체 기간 좋아요
-    @RequestMapping(value = "/rank/vinyl", method = RequestMethod.GET)
-    public ResponseDto<?> getRankVinyl() {
+    @RequestMapping(value = "/rank/vinyl/like", method = RequestMethod.GET)
+    public ResponseDto<?> getRankVinylLike() {
 
-        return rankService.rankVinyl();
+        return rankService.rankVinylLike();
     }
 
     // 특정 기간 좋아요
-    @RequestMapping(value = "/rank/vinyl/month", method = RequestMethod.GET)
-    public ResponseDto<?> getRankVinylMonth() {
+    @RequestMapping(value = "/rank/vinyl/like/month", method = RequestMethod.GET)
+    public ResponseDto<?> getRankVinylLikeMonth() {
 
-        return rankService.rankVinylMonth();
+        return rankService.rankVinylLikeMonth();
+    }
+
+    // 전체 기간 조회수
+    @RequestMapping(value = "/rank/vinyl/view", method = RequestMethod.GET)
+    public ResponseDto<?> getRankVinylView() {
+
+        return rankService.rankVinylView();
     }
 
 

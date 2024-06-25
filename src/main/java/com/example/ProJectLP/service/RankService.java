@@ -23,7 +23,7 @@ public class RankService {
     private final VinylLikeRepository vinylLikeRepository;
 
     @Transactional
-    public ResponseDto<?> rankVinyl() {
+    public ResponseDto<?> rankVinylLike() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class RankService {
     }
 
     @Transactional
-    public ResponseDto<?> rankVinylMonth() {
+    public ResponseDto<?> rankVinylLikeMonth() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
 
@@ -82,6 +82,45 @@ public class RankService {
         }
 
         dtoList = dtoList.stream().sorted(Comparator.comparing(VinylRankResponseDto::getNumLikes).reversed()).collect(Collectors.toList());
+
+        List<VinylRankResponseDto> rankDtoList = new ArrayList<>();
+
+        for (int i = 0; i < dtoList.size(); i++) {
+            VinylRankResponseDto rankDto = VinylRankResponseDto.builder()
+                    .id(dtoList.get(i).getId())
+                    .title(dtoList.get(i).getTitle())
+                    .artist(dtoList.get(i).getArtist())
+                    .numLikes(dtoList.get(i).getNumLikes())
+                    .numView(dtoList.get(i).getNumView())
+                    .imageUrl(dtoList.get(i).getImageUrl())
+                    .build();
+            rankDtoList.add(rankDto);
+            if (i == 9) break;
+        }
+
+        return ResponseDto.success(rankDtoList);
+    }
+
+    @Transactional
+    public ResponseDto<?> rankVinylView() {
+        List<Vinyl> vinylList = vinylRepository.findAll();
+        List<VinylRankResponseDto> dtoList = new ArrayList<>();
+
+        for (Vinyl vinyl : vinylList) {
+            if (vinyl.getView() != 0){
+                VinylRankResponseDto dto = VinylRankResponseDto.builder()
+                        .id(vinyl.getId())
+                        .title(vinyl.getTitle())
+                        .artist(vinyl.getArtist())
+                        .imageUrl(vinyl.getImageUrl())
+                        .numLikes(vinyl.getVinylLikes().size())
+                        .numView(vinyl.getView())
+                        .build();
+                dtoList.add(dto);
+            }
+        }
+
+        dtoList = dtoList.stream().sorted(Comparator.comparing(VinylRankResponseDto::getNumView).reversed()).collect(Collectors.toList());
 
         List<VinylRankResponseDto> rankDtoList = new ArrayList<>();
 
