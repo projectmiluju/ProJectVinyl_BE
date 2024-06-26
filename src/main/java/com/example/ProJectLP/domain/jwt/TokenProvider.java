@@ -2,15 +2,19 @@ package com.example.ProJectLP.domain.jwt;
 
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.refreshToken.RefreshToken;
-import com.example.ProJectLP.domain.refreshToken.RefreshTokenRepository;
 import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.service.RefreshTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Optional;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -32,11 +36,15 @@ public class TokenProvider {
 
     private final Key key;
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+    @Qualifier("redisTemplate1")
+    @Autowired
+    private StringRedisTemplate redisTemplate1;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
-                         RefreshTokenRepository refreshTokenRepository) {
-        this.refreshTokenRepository = refreshTokenRepository;
+                         RefreshTokenService refreshTokenService) {
+        this.refreshTokenService = refreshTokenService;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -59,7 +67,7 @@ public class TokenProvider {
 
         RefreshToken refreshTokenObject = new RefreshToken(refreshToken, member.getId());
 
-        refreshTokenRepository.save(refreshTokenObject);
+        refreshTokenService.setDataExpire(refreshTokenObject.getRefreshToken(),refreshTokenObject.getMemberId().toString(), 1 * 60 * 60 * 24);
 
         return TokenDto.builder()
                 .grantType(BEARER_PREFIX)
@@ -79,9 +87,9 @@ public class TokenProvider {
         return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String refreshToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT signature");
@@ -95,20 +103,19 @@ public class TokenProvider {
         return false;
     }
 
-    @Transactional(readOnly = true)
-    public RefreshToken isPresentRefreshToken(Member member) {
-        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMemberId(member.getId());
-        return optionalRefreshToken.orElse(null);
-    }
+
 
     @Transactional
-    public ResponseDto<?> deleteRefreshToken(Member member) {
-        RefreshToken refreshToken = isPresentRefreshToken(member);
-        if (null == refreshToken) {
+    public ResponseDto<?> deleteRefreshToken(HttpServletRequest request, Member member) {
+
+        if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("400", "Token does not exist");
         }
+        if (Objects.equals(refreshTokenService.getData(request.getHeader("RefreshToken")), member.getId().toString()))
+        {
+            refreshTokenService.deleteData(request.getHeader("RefreshToken"));
+        } else return ResponseDto.fail("400", "Token does not match member");
 
-        refreshTokenRepository.delete(refreshToken);
         return ResponseDto.success("success");
     }
 }

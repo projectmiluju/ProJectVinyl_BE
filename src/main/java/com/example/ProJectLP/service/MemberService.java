@@ -3,8 +3,6 @@ package com.example.ProJectLP.service;
 import com.example.ProJectLP.domain.jwt.TokenProvider;
 import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.member.MemberRepository;
-import com.example.ProJectLP.domain.refreshToken.RefreshToken;
-import com.example.ProJectLP.domain.refreshToken.RefreshTokenRepository;
 import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.request.MemberRequestDto;
 import com.example.ProJectLP.dto.request.SignInRequestDto;
@@ -28,8 +26,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+//    private final RefreshTokenRepository refreshTokenRepository;
     private final MailSendService mailSendService;
+    private final RefreshTokenService refreshTokenService;
 
 
     //회원가입
@@ -81,16 +80,17 @@ public class MemberService {
             return ResponseDto.fail("400", "Check your email and auth num");
         }
 
-        if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
+
+//        if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(member);
             tokenToHeaders(tokenDto, response);
-        }else {
-            deleteRefreshToken(member);
-            if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
-                TokenDto tokenDto = tokenProvider.generateTokenDto(member);
-                tokenToHeaders(tokenDto, response);
-            }
-        }
+//        }else {
+//            deleteRefreshToken(member);
+//            if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
+//                TokenDto tokenDto = tokenProvider.generateTokenDto(member);
+//                tokenToHeaders(tokenDto, response);
+//            }
+//        }
 
         return ResponseDto.success(
                 MemberResponseDto.builder()
@@ -120,7 +120,7 @@ public class MemberService {
                     "사용자를 찾을 수 없습니다.");
         }
 
-        return tokenProvider.deleteRefreshToken(member);
+        return tokenProvider.deleteRefreshToken(request,member);
     }
 
     //
@@ -144,16 +144,16 @@ public class MemberService {
         else return ResponseDto.fail("400","ID already exists");
     }
 
-    @Transactional(readOnly = true)
-    public RefreshToken isPresentRefreshToken(Member member) {
-        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMemberId(member.getId());
-        return optionalRefreshToken.orElse(null);
-    }
-
-    @Transactional
-    public void deleteRefreshToken(Member member) {
-        RefreshToken refreshToken = isPresentRefreshToken(member);
-        refreshTokenRepository.delete(refreshToken);
-    }
+//    @Transactional(readOnly = true)
+//    public RefreshToken isPresentRefreshToken(Member member) {
+//        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMemberId(member.getId());
+//        return optionalRefreshToken.orElse(null);
+//    }
+//
+//    @Transactional
+//    public void deleteRefreshToken(Member member) {
+//        RefreshToken refreshToken = isPresentRefreshToken(member);
+//        refreshTokenRepository.delete(refreshToken);
+//    }
 
 }
