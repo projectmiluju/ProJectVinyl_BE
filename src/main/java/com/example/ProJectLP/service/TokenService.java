@@ -22,7 +22,7 @@ public class TokenService {
 
     public ResponseDto<?> reissue(TokenReissueDto tokenReissueDto,
                                   HttpServletRequest request,
-                                  HttpServletResponse response){
+                                  HttpServletResponse response) {
 
         Member member = memberRepository.findByUsername(tokenReissueDto.getUsername()).get();
 
