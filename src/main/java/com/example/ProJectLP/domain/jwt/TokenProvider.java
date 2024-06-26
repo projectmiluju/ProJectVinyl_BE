@@ -38,9 +38,6 @@ public class TokenProvider {
 
     @Autowired
     private RefreshTokenService refreshTokenService;
-    @Qualifier("redisTemplate1")
-    @Autowired
-    private StringRedisTemplate redisTemplate1;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
                          RefreshTokenService refreshTokenService) {
