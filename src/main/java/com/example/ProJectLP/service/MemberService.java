@@ -9,14 +9,18 @@ import com.example.ProJectLP.dto.request.SignInRequestDto;
 import com.example.ProJectLP.dto.response.MemberResponseDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -123,13 +127,6 @@ public class MemberService {
         return tokenProvider.deleteRefreshToken(request,member);
     }
 
-    //
-    @Transactional(readOnly = true)
-    public Member isPresentMemberByUsername(String username) {
-        Optional<Member> optionalMember = memberRepository.findByUsername(username);
-        return optionalMember.orElse(null);
-    }
-
     public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
         response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
@@ -137,11 +134,29 @@ public class MemberService {
     }
 
     // 아이디 중복검사
+    @Transactional(readOnly = true)
+    public Member isPresentMemberByUsername(String username) {
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        return optionalMember.orElse(null);
+    }
     @Transactional
     public ResponseDto<?> checkUsername(String username){
         Member member = isPresentMemberByUsername(username);
         if(member == null) return ResponseDto.success(true);
         else return ResponseDto.fail("400","ID already exists");
+    }
+
+    // 메일 중복검사
+    @Transactional(readOnly = true)
+    public Member isPresentMemberByEmail(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        return optionalMember.orElse(null);
+    }
+    @Transactional
+    public ResponseEntity<?> checkEmail(String email){
+        Member member = isPresentMemberByEmail(email);
+        if(member == null) return ResponseEntity.ok(Map.of("msg", "메일 중복검사가 완료 됐습니다.", "data", email));
+        else throw new PrivateException(ErrorCode.SIGNUP_EMAIL_CHECK);
     }
 
 //    @Transactional(readOnly = true)
