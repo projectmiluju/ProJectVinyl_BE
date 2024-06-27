@@ -71,35 +71,35 @@ public class VinylCommentService {
 
     //vinyl 댓글 삭제
     @Transactional
-    public ResponseDto<?> deleteVinylComment(Long vinylId, Long id, HttpServletRequest request) {
+    public ResponseEntity<?> deleteVinylComment(Long vinylId, Long id, HttpServletRequest request) {
         if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
         Vinyl vinyl = isPresentVinyl(vinylId);
+        if (null == vinyl) {
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
+        }
         VinylComment vinylComment = isPresentVinylComment(id);
-        if (null == vinyl || null == vinylComment) {
-            return ResponseDto.fail("400", "Not existing vinylId or vinylCommentId");
+        if (null == vinylComment) {
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_NOTFOUND);
         }
 
-        if (vinylComment.validateMember(member)){
-
+        if (!vinylComment.getMember().equals(member)) {
             if (member.isRole()){
                 vinylCommentRepository.delete(vinylComment);
-                return ResponseDto.success("Delete Success");
+                return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 삭제기 완료 됐습니다.","data", vinyl.getId()));
             }
-
-            return ResponseDto.fail("400", "Delete Author Only");
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_DELETE_FORBIDDEN);
         }
 
         vinylCommentRepository.delete(vinylComment);
-        return ResponseDto.success("Delete Success");
+        return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 삭제기 완료 됐습니다.","data", vinyl.getId()));
     }
 
     //vinyl 댓글 수정

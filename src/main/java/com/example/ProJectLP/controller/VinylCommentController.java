@@ -25,7 +25,7 @@ public class  VinylCommentController {
 
     //vinyl 댓글 삭제
     @RequestMapping(value = "/delete/vinyl/{vinylId}/{id}", method = RequestMethod.DELETE)
-    public ResponseDto<?> deleteVinylComment(@PathVariable Long vinylId,
+    public ResponseEntity<?> deleteVinylComment(@PathVariable Long vinylId,
                                              @PathVariable Long id,
                                              HttpServletRequest request){
         return vinylCommentService.deleteVinylComment(vinylId, id, request);
