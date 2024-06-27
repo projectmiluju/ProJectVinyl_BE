@@ -11,6 +11,8 @@ public enum ErrorCode {
 
     LOGIN_REQUIRED(HttpStatus.BAD_REQUEST, "E_001", "로그인이 필요합니다."),
     LOGIN_NOTFOUND_MEMBER(HttpStatus.BAD_REQUEST,"E_002","사용자를 찾을수 없습니다."),
+    LOGIN_EMPTY_USERNAME(HttpStatus.BAD_REQUEST, "E_010","아이디를 입력해 주세요."),
+    LOGIN_EMPTY_PASSWORD(HttpStatus.BAD_REQUEST,"E_012","비밀번호를 입력해 주세요."),
     LOGIN_NOTFOUND_USERNAME(HttpStatus.BAD_REQUEST,"E_003","존재하지 않는 아이디이거나 비밀번호가 틀렸습니다."),
     LOGIN_NOTFOUND_PASSWORD(HttpStatus.BAD_REQUEST,"E_003","존재하지 않는 아이디이거나 비밀번호가 틀렸습니다."),
 

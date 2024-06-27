@@ -80,6 +80,13 @@ public class MemberService {
     //로그인
     @Transactional
     public ResponseEntity<?> loginMember(SignInRequestDto requestDto, HttpServletResponse response) {
+        if (requestDto.getUsername().isBlank()) {
+            throw new PrivateException(ErrorCode.LOGIN_EMPTY_USERNAME);
+        }
+        if (requestDto.getPassword().isBlank()) {
+            throw new PrivateException(ErrorCode.LOGIN_EMPTY_PASSWORD);
+        }
+
         Member member = isPresentMemberByUsername(requestDto.getUsername());
         if (null == member) {
             throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_USERNAME);
