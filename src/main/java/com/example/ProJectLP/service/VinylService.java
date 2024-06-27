@@ -132,29 +132,22 @@ public class VinylService {
 
     //vinyl 업데이트
     @Transactional
-    public ResponseDto<?> updateVinyl(Long id, VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+    public ResponseEntity<?> updateVinyl(Long id, VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
+        }
+        if (!member.isRole()) {
+            throw new PrivateException(ErrorCode.VINYL_MODIFY_FORBIDDEN);
         }
 
         Vinyl vinyl = isPresentVinyl(id);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
-        }
-
-        if (!member.isRole()) {
-            return ResponseDto.fail("400", "Update Admin Only");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
 
         if (requestDto.getTitle() == null || requestDto.getTitle().isEmpty()) {
@@ -201,20 +194,20 @@ public class VinylService {
 
         vinyl.setSongs(vinyl.getSongs());
 
-        return ResponseDto.success(
-                VinylResponseDto.builder()
-                        .id(vinyl.getId())
-                        .title(vinyl.getTitle())
-                        .description(vinyl.getDescription())
-                        .artist(vinyl.getArtist())
-                        .genre(vinyl.getGenre())
-                        .imageUrl(vinyl.getImageUrl())
-                        .releasedYear(vinyl.getReleasedYear())
-                        .releasedMonth(vinyl.getReleasedMonth())
-                        .createdAt(vinyl.getCreatedAt())
-                        .modifiedAt(vinyl.getModifiedAt())
-                        .build()
-        );
+        VinylResponseDto.builder()
+                .id(vinyl.getId())
+                .title(vinyl.getTitle())
+                .description(vinyl.getDescription())
+                .artist(vinyl.getArtist())
+                .genre(vinyl.getGenre())
+                .imageUrl(vinyl.getImageUrl())
+                .releasedYear(vinyl.getReleasedYear())
+                .releasedMonth(vinyl.getReleasedMonth())
+                .createdAt(vinyl.getCreatedAt())
+                .modifiedAt(vinyl.getModifiedAt())
+                .build();
+
+        return ResponseEntity.ok(Map.of("msg", "바이닐 수정이 완료 됐습니다.", "data", vinyl.getId()));
     }
 
     //vinyl 전체조회

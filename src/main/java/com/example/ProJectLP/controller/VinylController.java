@@ -33,7 +33,7 @@ public class VinylController {
 
     //vinyl 업데이트
     @RequestMapping(value = "/update/vinyl/{id}", method = RequestMethod.PUT)
-    public ResponseDto<?> updateVinyl(@PathVariable Long id, @RequestPart VinylRequestDto requestDto,
+    public ResponseEntity<?> updateVinyl(@PathVariable Long id, @RequestPart VinylRequestDto requestDto,
                                       @RequestPart MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         return vinylService.updateVinyl(id,requestDto,multipartFile,request);
     }
