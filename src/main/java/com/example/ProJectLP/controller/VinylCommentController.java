@@ -5,20 +5,21 @@ import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.VinylCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-public class VinylCommentController {
+public class  VinylCommentController {
 
     private final VinylCommentService vinylCommentService;
 
 
     //vinyl 댓글 등록
     @RequestMapping(value = "/upload/vinyl/{vinylId}/comment", method = RequestMethod.POST)
-    public ResponseDto<?> uploadVinylComment(@PathVariable Long vinylId,
-                                             @RequestBody VinylCommentRequestDto requestDto,
-                                             HttpServletRequest request){
+    public ResponseEntity<?> uploadVinylComment(@PathVariable Long vinylId,
+                                                @RequestBody VinylCommentRequestDto requestDto,
+                                                HttpServletRequest request){
         return vinylCommentService.uploadVinylComment(vinylId,requestDto,request);
     }
 

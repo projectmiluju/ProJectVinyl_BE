@@ -20,7 +20,10 @@ public enum ErrorCode {
     VINYL_DELETE_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_004", "바이닐 삭제권한이 없는 사용자 입니다."),
     VINYL_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_005", "바이닐 수정권한이 없는 사용자 입니다."),
     VINYL_NOTFOUND(HttpStatus.BAD_REQUEST,"E_006","찾을수 없는 바이닐 입니다."),
+
     VINYL_SONG_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_005", "트랙리스트 수정권한이 없는 사용자 입니다."),
+
+    VINYL_COMMENT_EMPTY_CONTENT(HttpStatus.BAD_REQUEST,"E_000", "댓글 내용을 입력해 주세요."),
 
 
     SIGNUP_EMPTY_USERNAME(HttpStatus.BAD_REQUEST, "E_010","아이디를 입력해 주세요."),

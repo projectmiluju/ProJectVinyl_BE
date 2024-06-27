@@ -11,6 +11,8 @@ import com.example.ProJectLP.dto.response.PageVinylCommentResponseDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.dto.response.VinylCommentResponseDto;
 
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
@@ -19,10 +21,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,28 +39,24 @@ public class VinylCommentService {
 
     //vinyl 댓글 등록
     @Transactional
-    public ResponseDto<?> uploadVinylComment(Long vinylId, VinylCommentRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> uploadVinylComment(Long vinylId, VinylCommentRequestDto requestDto, HttpServletRequest request) {
 
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
-
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
         Vinyl vinyl = isPresentVinyl(vinylId);
-
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
+        }
+
+        if (requestDto.getContent().isBlank()){
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_EMPTY_CONTENT);
         }
 
         VinylComment vinylComment = VinylComment.builder()
@@ -64,18 +64,9 @@ public class VinylCommentService {
                 .member(member)
                 .content(requestDto.getContent())
                 .build();
-
         vinylCommentRepository.save(vinylComment);
 
-        return ResponseDto.success(
-                VinylCommentResponseDto.builder()
-                        .id(vinylComment.getId())
-                        .username(vinylComment.getMember().getUsername())
-                        .content(vinylComment.getContent())
-                        .build()
-        );
-
-
+        return ResponseEntity.ok(Map.of("msg", "댓글 등록이 완료 됐습니다.","data", vinyl.getId()));
     }
 
     //vinyl 댓글 삭제
