@@ -5,7 +5,6 @@ import com.example.ProJectLP.domain.member.Member;
 import com.example.ProJectLP.domain.member.MemberRepository;
 import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.request.TokenReissueDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.exception.ErrorCode;
 import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.HttpServletRequest;
