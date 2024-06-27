@@ -1,5 +1,6 @@
 package com.example.ProJectLP.exception;
 
+import com.example.ProJectLP.domain.vinyl.Vinyl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -13,9 +14,10 @@ public enum ErrorCode {
     LOGIN_NOTFOUND_MEMBER(HttpStatus.BAD_REQUEST,"E_002","사용자를 찾을수 없습니다."),
 
 
-    VINYL_UPLOAD_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_003", "바이닐 등록권한이 없는 사용자 입니다.");
-
-
+    VINYL_UPLOAD_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_003", "바이닐 등록권한이 없는 사용자 입니다."),
+    VINYL_DELETE_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_004", "바이닐 삭제권한이 없는 사용자 입니다."),
+    VINYL_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_005", "바이닐 수정권한이 없는 사용자 입니다."),
+    VINYL_NOTFOUND(HttpStatus.BAD_REQUEST,"E_006","찾을수 없는 바이닐 입니다.");
 
 //    CHALLENGE_NOTFOUND(HttpStatus.BAD_REQUEST,"E_001","찾을수 없는 챌린지 입니다."),
 //    CHALLENGE_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST,"E_002","수정권한이 없는 사용자 입니다."),

@@ -27,7 +27,7 @@ public class VinylController {
 
     //vinyl 삭제
     @RequestMapping(value = "/delete/vinyl/{id}", method = RequestMethod.DELETE)
-    public ResponseDto<?> deleteVinyl(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<?> deleteVinyl(@PathVariable Long id, HttpServletRequest request) {
         return vinylService.deleteVinyl(id,request);
     }
 

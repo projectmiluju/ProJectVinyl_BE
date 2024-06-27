@@ -105,34 +105,29 @@ public class VinylService {
 
     //vinyl 삭제
     @Transactional
-    public ResponseDto<?> deleteVinyl(Long id, HttpServletRequest request){
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+    public ResponseEntity<?> deleteVinyl(Long id, HttpServletRequest request){
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
+        }
+
+        if (!member.isRole()) {
+            throw new PrivateException(ErrorCode.VINYL_DELETE_FORBIDDEN);
         }
 
         Vinyl vinyl = isPresentVinyl(id);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
-        }
-
-        if (!member.isRole()) {
-            return ResponseDto.fail("400", "Delete Admin Only");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
 
         s3Service.delete(vinyl);
         vinylRepository.delete(vinyl);
-        return ResponseDto.success("Delete Success");
+
+        return ResponseEntity.ok(Map.of("msg", "바이닐 삭제가 완료 됐습니다.", "data", vinyl.getId()));
     }
 
     //vinyl 업데이트
