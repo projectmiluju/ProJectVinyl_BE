@@ -110,7 +110,7 @@ public class MemberService {
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
                 .build();
-        return ResponseEntity.ok(Map.of("msg", member.getUsername()+"님 로그인이 완료 됏습니다.", "data", memberResponseDto));
+        return ResponseEntity.ok(Map.of("msg", member.getUsername()+"님 로그인이 완료 됐습니다.", "data", memberResponseDto));
     }
 
     //로그아웃
