@@ -1,7 +1,6 @@
 package com.example.ProJectLP.controller;
 
 import com.example.ProJectLP.dto.request.SongRequestDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.SongService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
