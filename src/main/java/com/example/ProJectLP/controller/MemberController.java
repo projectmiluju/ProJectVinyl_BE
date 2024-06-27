@@ -41,15 +41,13 @@ public class MemberController {
 
     //아이디 중복검사
     @RequestMapping(value = "/api/username", method = RequestMethod.POST)
-    public ResponseDto<?> usernameCheck(@RequestBody Map<String, String> body) {
-
+    public ResponseEntity<?> usernameCheck(@RequestBody Map<String, String> body) {
         return memberService.checkUsername(body.get("username"));
     }
 
     //메일 중복검사
     @RequestMapping(value = "/api/email", method = RequestMethod.POST)
     public ResponseEntity<?> emailCheck(@RequestBody Map<String, String> body) {
-
         return memberService.checkEmail(body.get("email"));
     }
 

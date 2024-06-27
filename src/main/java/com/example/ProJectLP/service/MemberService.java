@@ -146,10 +146,10 @@ public class MemberService {
         return optionalMember.orElse(null);
     }
     @Transactional
-    public ResponseDto<?> checkUsername(String username){
+    public ResponseEntity<?> checkUsername(String username){
         Member member = isPresentMemberByUsername(username);
-        if(member == null) return ResponseDto.success(true);
-        else return ResponseDto.fail("400","ID already exists");
+        if(member == null) return ResponseEntity.ok(Map.of("msg", "가입 가능한 아이디입니다."));
+        else throw new PrivateException(ErrorCode.SIGNUP_ALREADY_USERNAME);
     }
 
     // 메일 중복검사
