@@ -93,7 +93,7 @@ public class VinylCommentService {
         if (!vinylComment.getMember().equals(member)) {
             if (member.isRole()){
                 vinylCommentRepository.delete(vinylComment);
-                return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 삭제기 완료 됐습니다.","data", vinyl.getId()));
+                return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 삭제가 완료 됐습니다.","data", vinyl.getId()));
             }
             throw new PrivateException(ErrorCode.VINYL_COMMENT_DELETE_FORBIDDEN);
         }
@@ -104,35 +104,39 @@ public class VinylCommentService {
 
     //vinyl 댓글 수정
     @Transactional
-    public ResponseDto<?> updateVinylComment(Long vinylId, Long id, VinylCommentRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> updateVinylComment(Long vinylId, Long id, VinylCommentRequestDto requestDto, HttpServletRequest request) {
         if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
         Vinyl vinyl = isPresentVinyl(vinylId);
+        if (null == vinyl) {
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
+        }
         VinylComment vinylComment = isPresentVinylComment(id);
-        if (null == vinyl || null == vinylComment) {
-            return ResponseDto.fail("400", "Not existing vinylId or vinylCommentId");
+        if (null == vinylComment) {
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_NOTFOUND);
         }
 
-        if (vinylComment.validateMember(member)){
-            return ResponseDto.fail("400", "Update Author Only");
+        if (requestDto.getContent().isBlank()){
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_EMPTY_CONTENT);
+        }
+
+        if (!vinylComment.getMember().equals(member)) {
+            if (member.isRole()){
+                vinylComment.update(requestDto);
+                return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 수정이 완료 됐습니다.","data", vinyl.getId()));
+            }
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_MODIFY_FORBIDDEN);
         }
 
         vinylComment.update(requestDto);
-        return ResponseDto.success(
-                VinylCommentResponseDto.builder()
-                        .id(vinylComment.getId())
-                        .username(vinylComment.getMember().getUsername())
-                        .content(vinylComment.getContent())
-                        .build()
-        );
+        return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 수정이 완료 됐습니다.","data", vinyl.getId()));
     }
 
     //vinyl 댓글 조회

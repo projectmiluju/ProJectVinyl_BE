@@ -33,8 +33,4 @@ public class VinylComment extends TimeStamped {
     public void update(VinylCommentRequestDto vinylCommentRequestDto) {
         this.content = vinylCommentRequestDto.getContent();
     }
-
-    public boolean validateMember(Member member) {
-        return !this.member.equals(member);
-    }
 }

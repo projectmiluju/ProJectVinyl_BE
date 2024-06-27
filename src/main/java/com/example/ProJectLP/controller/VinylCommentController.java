@@ -33,7 +33,7 @@ public class  VinylCommentController {
 
     //vinyl 댓글 수정
     @RequestMapping(value = "/update/vinyl/{vinylId}/{id}", method = RequestMethod.PUT)
-    public ResponseDto<?> updateVinylComment(@PathVariable Long vinylId,
+    public ResponseEntity<?> updateVinylComment(@PathVariable Long vinylId,
                                              @PathVariable Long id,
                                              @RequestBody VinylCommentRequestDto requestDto,
                                              HttpServletRequest request){
