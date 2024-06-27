@@ -6,6 +6,7 @@ import com.example.ProJectLP.service.VinylService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ public class VinylController {
 
     //vinyl 등록
     @RequestMapping(value = "/upload/vinyl", method = RequestMethod.POST)
-    public ResponseDto<?> uploadVinyl(@RequestPart VinylRequestDto requestDto, @RequestPart MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+    public ResponseEntity<?> uploadVinyl(@RequestPart VinylRequestDto requestDto, @RequestPart MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         return vinylService.uploadVinyl(requestDto, multipartFile, request);
     }
 

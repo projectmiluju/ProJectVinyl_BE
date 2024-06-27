@@ -10,6 +10,8 @@ import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylComment.VinylCommentRepository;
 import com.example.ProJectLP.dto.request.VinylRequestDto;
 import com.example.ProJectLP.dto.response.*;
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -43,71 +47,60 @@ public class VinylService {
 
     //vinyl 등록
     @Transactional
-    public ResponseDto<?> uploadVinyl(VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+    public ResponseEntity<?> uploadVinyl(VinylRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
-
-
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
-        if (member.isRole()){
+        if (!member.isRole()){
+            throw new PrivateException(ErrorCode.VINYL_UPLOAD_FORBIDDEN);
+        }
 
-            String releasedYear = requestDto.getReleasedTime().substring(0,4);
-            String releasedMonth = requestDto.getReleasedTime().substring(4,6);
+        String releasedYear = requestDto.getReleasedTime().substring(0,4);
+        String releasedMonth = requestDto.getReleasedTime().substring(4,6);
 
+        String imageUrl = s3Service.upload(multipartFile);
 
-            String imageUrl = s3Service.upload(multipartFile);
+        Vinyl vinyl = Vinyl.builder()
+                .title(requestDto.getTitle())
+                .description(requestDto.getDescription())
+                .artist(requestDto.getArtist())
+                .genre(requestDto.getGenre())
+                .imageUrl(imageUrl)
+                .releasedYear(releasedYear)
+                .releasedMonth(releasedMonth)
+                .build();
+        vinylRepository.save(vinyl);
 
-            Vinyl vinyl = Vinyl.builder()
-                    .title(requestDto.getTitle())
-                    .description(requestDto.getDescription())
-                    .artist(requestDto.getArtist())
-                    .genre(requestDto.getGenre())
-                    .imageUrl(imageUrl)
-                    .releasedYear(releasedYear)
-                    .releasedMonth(releasedMonth)
-                    .build();
-
-            vinylRepository.save(vinyl);
-
-            for (int i = 0; i < requestDto.getSongs().size(); i++) {
-                Song song = Song.builder()
+        for (int i = 0; i < requestDto.getSongs().size(); i++) {
+            Song song = Song.builder()
                     .title(requestDto.getSongs().get(i).getTitle())
                     .side(requestDto.getSongs().get(i).getSide())
                     .playingTime(requestDto.getSongs().get(i).getPlayingTime())
                     .vinyl(vinyl).build();
 
-                songRepository.save(song);
-            }
-
-            return ResponseDto.success(
-                    VinylResponseDto.builder()
-                            .id(vinyl.getId())
-                            .title(vinyl.getTitle())
-                            .description(vinyl.getDescription())
-                            .artist(vinyl.getArtist())
-                            .genre(vinyl.getGenre())
-                            .imageUrl(vinyl.getImageUrl())
-                            .releasedYear(releasedYear)
-                            .releasedMonth(releasedMonth)
-                            .createdAt(vinyl.getCreatedAt())
-                            .modifiedAt(vinyl.getModifiedAt())
-                            .build()
-            );
+            songRepository.save(song);
         }
-        else return ResponseDto.fail("400", "Upload Admin Only");
 
+        VinylResponseDto.builder()
+                .id(vinyl.getId())
+                .title(vinyl.getTitle())
+                .description(vinyl.getDescription())
+                .artist(vinyl.getArtist())
+                .genre(vinyl.getGenre())
+                .imageUrl(vinyl.getImageUrl())
+                .releasedYear(releasedYear)
+                .releasedMonth(releasedMonth)
+                .createdAt(vinyl.getCreatedAt())
+                .modifiedAt(vinyl.getModifiedAt())
+                .build();
+
+        return ResponseEntity.ok(Map.of("msg", "바이닐 등록이 완료 됐습니다.", "data", vinyl.getId()));
     }
 
     //vinyl 삭제
