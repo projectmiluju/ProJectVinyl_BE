@@ -4,15 +4,16 @@ import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import com.example.ProJectLP.domain.vinylLike.VinylLikeRepository;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.dto.response.VinylRankResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +24,7 @@ public class RankService {
     private final VinylLikeRepository vinylLikeRepository;
 
     @Transactional
-    public ResponseDto<?> rankVinylLike() {
+    public ResponseEntity<?> rankVinylLike() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
 
@@ -58,11 +59,11 @@ public class RankService {
             if (i == 9) break;
         }
 
-        return ResponseDto.success(rankDtoList);
+        return ResponseEntity.ok(Map.of("msg","바이닐 좋아요 랭킹 조회가 완료 됐습니다.","data", rankDtoList));
     }
 
     @Transactional
-    public ResponseDto<?> rankVinylLikeMonth() {
+    public ResponseEntity<?> rankVinylLikeMonth() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
 
@@ -98,11 +99,11 @@ public class RankService {
             if (i == 9) break;
         }
 
-        return ResponseDto.success(rankDtoList);
+        return ResponseEntity.ok(Map.of("msg","최근 한달 기준 바이닐 좋아요 랭킹 조회가 완료 됐습니다.","data",rankDtoList));
     }
 
     @Transactional
-    public ResponseDto<?> rankVinylView() {
+    public ResponseEntity<?> rankVinylView() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
 
@@ -137,6 +138,6 @@ public class RankService {
             if (i == 9) break;
         }
 
-        return ResponseDto.success(rankDtoList);
+        return ResponseEntity.ok(Map.of("msg","바이닐 조회수 랭킹 조회가 완료 됐습니다.","data",rankDtoList));
     }
 }

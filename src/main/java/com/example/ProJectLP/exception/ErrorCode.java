@@ -47,16 +47,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_VALID(HttpStatus.BAD_REQUEST,"E_012","유효하지 않은 토큰입니다.");
 
 
-//    DETAIL_CHALLENGE_NOTFOUND(HttpStatus.BAD_REQUEST,"E_004","잘못된 챌린지 번호입니다."),
-//    DETAIL_LIMITED_CHALLENGE(HttpStatus.BAD_REQUEST,"E_005","더이상 신청할 수 없는 챌린지 입니다."),
-//    DETAIL_ALREADY_JOINED(HttpStatus.BAD_REQUEST,"E_006","이미 참여한 챌린지입니다."),
-//    DETAIL_NOT_JOINED(HttpStatus.BAD_REQUEST,"E_007","참여하지 않은 챌린지 입니다."),
 //
 //    TOKEN_REISSUE(HttpStatus.BAD_REQUEST,"E_011","재로그인이 필요합니다."),
 //
-
-//    WISH_DELETE_FORBIDDEN(HttpStatus.BAD_REQUEST,"E_023","취소 권한이 없는 사용자 입니다.");
-
     private final HttpStatus httpStatus;
     private final String errorCode;
     private final String errorMsg;
