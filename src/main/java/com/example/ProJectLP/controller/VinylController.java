@@ -1,7 +1,6 @@
 package com.example.ProJectLP.controller;
 
 import com.example.ProJectLP.dto.request.VinylRequestDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.VinylService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
