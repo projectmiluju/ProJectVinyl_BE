@@ -5,7 +5,6 @@ import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
