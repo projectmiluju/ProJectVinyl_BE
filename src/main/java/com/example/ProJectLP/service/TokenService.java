@@ -6,10 +6,15 @@ import com.example.ProJectLP.domain.member.MemberRepository;
 import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.request.TokenReissueDto;
 import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +25,9 @@ public class TokenService {
     private final TokenProvider tokenProvider;
 
 
-    public ResponseDto<?> reissue(TokenReissueDto tokenReissueDto,
-                                  HttpServletRequest request,
-                                  HttpServletResponse response) {
+    public ResponseEntity<?> reissue(TokenReissueDto tokenReissueDto,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) {
 
         Member member = memberRepository.findByUsername(tokenReissueDto.getUsername()).get();
 
@@ -33,9 +38,9 @@ public class TokenService {
                 response.addHeader("RefreshToken", tokenDto.getRefreshToken());
                 response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
                 refreshTokenService.deleteData(request.getHeader("RefreshToken"));
-                return ResponseDto.success("Successfully token reissued");
+                return ResponseEntity.ok(Map.of("msg","토큰 재발급이 완료 됐습니다."));
             }
         }
-        return ResponseDto.fail("400", "unSuccessfully token reissued");
+        throw new PrivateException(ErrorCode.TOKEN_REISSUE);
     }
 }

@@ -44,12 +44,10 @@ public enum ErrorCode {
     SIGNUP_EMPTY_EMAIL_CHECK(HttpStatus.BAD_REQUEST,"E_012","이메일 인증 코드를 입력해 주세요."),
     SIGNUP_EMAIL_CHECK(HttpStatus.BAD_REQUEST, "E_013", "이메일 인증 코드를 확인헤 주세요."),
 
-    REFRESH_TOKEN_NOT_VALID(HttpStatus.BAD_REQUEST,"E_012","유효하지 않은 토큰입니다.");
+    REFRESH_TOKEN_NOT_VALID(HttpStatus.BAD_REQUEST,"E_012","유효하지 않은 토큰입니다."),
 
+    TOKEN_REISSUE(HttpStatus.BAD_REQUEST,"E_011","재로그인이 필요합니다.");
 
-//
-//    TOKEN_REISSUE(HttpStatus.BAD_REQUEST,"E_011","재로그인이 필요합니다."),
-//
     private final HttpStatus httpStatus;
     private final String errorCode;
     private final String errorMsg;
