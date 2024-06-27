@@ -40,14 +40,14 @@ public class VinylController {
 
     //vinyl 전체조회
     @RequestMapping(value = "/get/vinyllist", method = RequestMethod.GET)
-    public ResponseDto<?> getVinyls(@RequestParam("pageNum") int page, @RequestParam("pageLimit") int limit) {
+    public ResponseEntity<?> getVinyls(@RequestParam("pageNum") int page, @RequestParam("pageLimit") int limit) {
         page = page -1;
         return vinylService.getVinylList(page,limit);
     }
 
     //vinyl 상세조회
     @RequestMapping(value = "/get/vinyl/{id}", method = RequestMethod.GET)
-    public ResponseDto<?> getVinyl(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> getVinyl(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
         vinylService.updateView(id, request, response);
         return vinylService.getVinyl(id);
     }

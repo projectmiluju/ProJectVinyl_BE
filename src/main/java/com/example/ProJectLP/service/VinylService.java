@@ -212,7 +212,7 @@ public class VinylService {
 
     //vinyl 전체조회
     @Transactional
-    public ResponseDto<?> getVinylList(int page, int limit) {
+    public ResponseEntity<?> getVinylList(int page, int limit) {
 
         Pageable pageable = PageRequest.of(page, limit);
 
@@ -231,15 +231,15 @@ public class VinylService {
                 .vinylList(dtoList)
                 .build();
 
-        return ResponseDto.success(pageVinylResponseDto);
+        return ResponseEntity.ok(Map.of("msg", "바이닐 조회가 완료 됐습니다.", "data", pageVinylResponseDto));
     }
 
     //vinyl 상세조회
     @Transactional
-    public ResponseDto<?> getVinyl(Long id) {
+    public ResponseEntity<?> getVinyl(Long id) {
         Vinyl vinyl = vinylRepository.findById(id).orElse(null);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
 
         List<Song> songs = songRepository.findAllByVinyl(vinyl);
@@ -265,25 +265,26 @@ public class VinylService {
             vinylCommentResponseDtoList.add(vinylCommentResponseDto);
         }
 
-        return ResponseDto.success(
-                VinylResponseDto.builder()
-                        .id(vinyl.getId())
-                        .title(vinyl.getTitle())
-                        .description(vinyl.getDescription())
-                        .artist(vinyl.getArtist())
-                        .genre(vinyl.getGenre())
-                        .imageUrl(vinyl.getImageUrl())
-                        .releasedYear(vinyl.getReleasedYear())
-                        .releasedMonth(vinyl.getReleasedMonth())
-                        .numComments(vinyl.getVinylComments().size())
-                        .numLikes(vinyl.getVinylLikes().size())
-                        .numView(vinyl.getView())
-                        .songs(songResponseDtoList)
-                        .vinylComments(vinylCommentResponseDtoList)
-                        .createdAt(vinyl.getCreatedAt())
-                        .modifiedAt(vinyl.getModifiedAt())
-                        .build()
-        );
+        VinylResponseDto vinylResponseDto = VinylResponseDto.builder()
+                .id(vinyl.getId())
+                .title(vinyl.getTitle())
+                .description(vinyl.getDescription())
+                .artist(vinyl.getArtist())
+                .genre(vinyl.getGenre())
+                .imageUrl(vinyl.getImageUrl())
+                .releasedYear(vinyl.getReleasedYear())
+                .releasedMonth(vinyl.getReleasedMonth())
+                .numComments(vinyl.getVinylComments().size())
+                .numLikes(vinyl.getVinylLikes().size())
+                .numView(vinyl.getView())
+                .songs(songResponseDtoList)
+                .vinylComments(vinylCommentResponseDtoList)
+                .createdAt(vinyl.getCreatedAt())
+                .modifiedAt(vinyl.getModifiedAt())
+                .build();
+
+        return ResponseEntity.ok(Map.of("msg", "바이닐 상세 조회가 완료 됐습니다.", "data", vinylResponseDto));
+
     }
 
     @Transactional
