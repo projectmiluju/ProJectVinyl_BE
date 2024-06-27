@@ -18,6 +18,8 @@ public enum ErrorCode {
     VINYL_DELETE_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_004", "바이닐 삭제권한이 없는 사용자 입니다."),
     VINYL_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_005", "바이닐 수정권한이 없는 사용자 입니다."),
     VINYL_NOTFOUND(HttpStatus.BAD_REQUEST,"E_006","찾을수 없는 바이닐 입니다."),
+    VINYL_SONG_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_005", "트랙리스트 수정권한이 없는 사용자 입니다."),
+
 
     SIGNUP_EMPTY_USERNAME(HttpStatus.BAD_REQUEST, "E_010","아이디를 입력해 주세요."),
     SIGNUP_ALREADY_USERNAME(HttpStatus.BAD_REQUEST,"E_007","중복된 아아디 입니다."),
@@ -28,13 +30,15 @@ public enum ErrorCode {
     SIGNUP_PASSWORD_CHECK(HttpStatus.BAD_REQUEST,"E_009","비밀번호와 비밀번호 확인이 일치하지 않습니다."),
     SIGNUP_EMAIL_CHECK(HttpStatus.BAD_REQUEST, "E_013", "이메일 인증 코드를 확인헤 주세요."),
 
+    REFRESH_TOKEN_NOT_VALID(HttpStatus.BAD_REQUEST,"E_012","유효하지 않은 토큰입니다.");
+
+
 //    DETAIL_CHALLENGE_NOTFOUND(HttpStatus.BAD_REQUEST,"E_004","잘못된 챌린지 번호입니다."),
 //    DETAIL_LIMITED_CHALLENGE(HttpStatus.BAD_REQUEST,"E_005","더이상 신청할 수 없는 챌린지 입니다."),
 //    DETAIL_ALREADY_JOINED(HttpStatus.BAD_REQUEST,"E_006","이미 참여한 챌린지입니다."),
 //    DETAIL_NOT_JOINED(HttpStatus.BAD_REQUEST,"E_007","참여하지 않은 챌린지 입니다."),
 //
 //    TOKEN_REISSUE(HttpStatus.BAD_REQUEST,"E_011","재로그인이 필요합니다."),
-    REFRESH_TOKEN_NOT_VALID(HttpStatus.BAD_REQUEST,"E_012","유효하지 않은 토큰입니다.");
 //
 //    WISH_CHALLENGE_NOTFOUND(HttpStatus.BAD_REQUEST,"E_019","잘못된 챌린지 번호입니다."),
 //    WISH_MEMBER_NOTFOUND(HttpStatus.BAD_REQUEST,"E_020","찾을수 없는 회원입니다."),

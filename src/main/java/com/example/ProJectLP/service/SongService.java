@@ -7,12 +7,15 @@ import com.example.ProJectLP.domain.song.SongRepository;
 import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.dto.request.SongRequestDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,34 +28,26 @@ public class SongService {
 
     //트랙리스트 수정
     @Transactional
-        public ResponseDto<?> updateSong(Long vinylid, SongRequestDto songs, HttpServletRequest request) {
-        if (null == request.getHeader("RefreshToken")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+    public ResponseEntity<?> updateSong(Long vinylid, SongRequestDto songs, HttpServletRequest request) {
+        if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
         Vinyl vinyl = isPresentVinyl(vinylid);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
 
         if (!member.isRole()) {
-            return ResponseDto.fail("400", "Update Admin Only");
+            throw new PrivateException(ErrorCode.VINYL_SONG_MODIFY_FORBIDDEN);
         }
 
         songRepository.deleteAllByVinylId(vinyl.getId());
-
-
         for (int i = 0; i < songs.getSongs().size(); i++) {
             Song song = Song.builder()
                     .title(songs.getSongs().get(i).getTitle())
@@ -62,11 +57,8 @@ public class SongService {
                     .build();
 
             songRepository.save(song);
-
-
         }
-
-        return ResponseDto.success("update trackList");
+        return ResponseEntity.ok(Map.of("msg", "트랙리스트 수정이 완료 됐습니다.","data", vinyl.getId()));
     }
 
     @Transactional
