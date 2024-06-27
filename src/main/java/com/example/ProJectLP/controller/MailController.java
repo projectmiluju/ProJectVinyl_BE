@@ -13,7 +13,7 @@ public class MailController {
 
     private final MailSendService mailService;
 
-    @RequestMapping(value = "/api/email", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/email/send", method = RequestMethod.POST)
     public ResponseDto<?> mailSend(@RequestBody @Valid EmailRequestDto emailDto){
         return mailService.joinEmail(emailDto.getEmail());
     }

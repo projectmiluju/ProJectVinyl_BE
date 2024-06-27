@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,7 +23,7 @@ public class MemberController {
 
     //회원가입
     @RequestMapping(value = "/api/signup", method = RequestMethod.POST)
-    public ResponseDto<?> signUp(@RequestBody @Valid MemberRequestDto requestDto) {
+    public ResponseEntity<?> signUp(@RequestBody @Valid MemberRequestDto requestDto) {
         return memberService.createMember(requestDto);
     }
 
@@ -43,6 +44,13 @@ public class MemberController {
     public ResponseDto<?> usernameCheck(@RequestBody Map<String, String> body) {
 
         return memberService.checkUsername(body.get("username"));
+    }
+
+    //메일 중복검사
+    @RequestMapping(value = "/api/email", method = RequestMethod.POST)
+    public ResponseEntity<?> emailCheck(@RequestBody Map<String, String> body) {
+
+        return memberService.checkEmail(body.get("email"));
     }
 
 

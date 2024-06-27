@@ -16,7 +16,17 @@ public enum ErrorCode {
     VINYL_UPLOAD_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_003", "바이닐 등록권한이 없는 사용자 입니다."),
     VINYL_DELETE_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_004", "바이닐 삭제권한이 없는 사용자 입니다."),
     VINYL_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST, "E_005", "바이닐 수정권한이 없는 사용자 입니다."),
-    VINYL_NOTFOUND(HttpStatus.BAD_REQUEST,"E_006","찾을수 없는 바이닐 입니다.");
+    VINYL_NOTFOUND(HttpStatus.BAD_REQUEST,"E_006","찾을수 없는 바이닐 입니다."),
+
+    SIGNUP_ALREADY_USERNAME(HttpStatus.BAD_REQUEST,"E_007","중복된 아아디 입니다."),
+    SIGNUP_ALREADY_EMAIL(HttpStatus.BAD_REQUEST,"E_008","중복된 이메일 입니다."),
+    SIGNUP_PASSWORD_CHECK(HttpStatus.BAD_REQUEST,"E_009","비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+    SIGNUP_EMPTY_USERNAME(HttpStatus.BAD_REQUEST, "E_010","아이디를 입력해 주세요."),
+    SIGNUP_EMPTY_EMAIL(HttpStatus.BAD_REQUEST,"E_011","이메일을 입력해 주세요."),
+    SIGNUP_EMPTY_PASSWORD(HttpStatus.BAD_REQUEST,"E_012","비밀번호를 입력해 주세요."),
+    SIGNUP_EMAIL_CHECK(HttpStatus.BAD_REQUEST, "E_013", "이메일 인증 코드를 확인헤 주세요.");
+
+
 
 //    CHALLENGE_NOTFOUND(HttpStatus.BAD_REQUEST,"E_001","찾을수 없는 챌린지 입니다."),
 //    CHALLENGE_MODIFY_FORBIDDEN(HttpStatus.BAD_REQUEST,"E_002","수정권한이 없는 사용자 입니다."),

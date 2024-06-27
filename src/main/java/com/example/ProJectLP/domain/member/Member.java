@@ -5,6 +5,7 @@ import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +28,7 @@ public class Member extends TimeStamped {
     @Column(unique = true, nullable = false, length = 10)
     private String username;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false,length = 50)
     private String email;
 
     @Column(nullable = false)

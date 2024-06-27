@@ -30,40 +30,46 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-//    private final RefreshTokenRepository refreshTokenRepository;
     private final MailSendService mailSendService;
-    private final RefreshTokenService refreshTokenService;
 
 
     //회원가입
     @Transactional
-    public ResponseDto<?> createMember(MemberRequestDto requestDto) {
+    public ResponseEntity<?> createMember(MemberRequestDto requestDto) {
+
+        if (null != isPresentMemberByUsername(requestDto.getUsername())) {
+            throw new PrivateException(ErrorCode.SIGNUP_ALREADY_USERNAME);
+        }
+        if (null != isPresentMemberByEmail(requestDto.getEmail())) {
+            throw new PrivateException(ErrorCode.SIGNUP_ALREADY_EMAIL);
+        }
         if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
-            return ResponseDto.fail("400",
-                    "Password and Confirm Password do not match");
+            throw new PrivateException(ErrorCode.SIGNUP_PASSWORD_CHECK);
+        }
+        if (requestDto.getUsername().isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_EMAIL);
+        }
+        if (requestDto.getEmail().isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_EMAIL);
+        }
+        if (requestDto.getPassword().isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_PASSWORD);
         }
 
         boolean emailCheck = mailSendService.emailCheck(requestDto.getEmail(), requestDto.getAuthNum());
         if (!emailCheck){
-            return ResponseDto.fail("400", "Check your email and auth num");
+            throw new PrivateException(ErrorCode.SIGNUP_EMAIL_CHECK);
         }
 
         Member member = Member.builder()
                 .username(requestDto.getUsername())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
+                .email(requestDto.getEmail())
                 .emailCheck(emailCheck)
                 .build();
         memberRepository.save(member);
-        return ResponseDto.success(
-                MemberResponseDto.builder()
-                        .id(member.getId())
-                        .username(member.getUsername())
-                        .role(member.isRole())
-                        .emailCheck(member.isEmailCheck())
-                        .createdAt(member.getCreatedAt())
-                        .modifiedAt(member.getModifiedAt())
-                        .build()
-        );
+
+        return ResponseEntity.ok(Map.of("msg", member.getUsername()+"님 회원가입이 완료 됐습니다."));
     }
 
     //로그인
@@ -155,20 +161,8 @@ public class MemberService {
     @Transactional
     public ResponseEntity<?> checkEmail(String email){
         Member member = isPresentMemberByEmail(email);
-        if(member == null) return ResponseEntity.ok(Map.of("msg", "메일 중복검사가 완료 됐습니다.", "data", email));
-        else throw new PrivateException(ErrorCode.SIGNUP_EMAIL_CHECK);
+        if(member == null) return ResponseEntity.ok(Map.of("msg", "가입 가능한 이메일입니다."));
+        else throw new PrivateException(ErrorCode.SIGNUP_ALREADY_EMAIL);
     }
-
-//    @Transactional(readOnly = true)
-//    public RefreshToken isPresentRefreshToken(Member member) {
-//        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMemberId(member.getId());
-//        return optionalRefreshToken.orElse(null);
-//    }
-//
-//    @Transactional
-//    public void deleteRefreshToken(Member member) {
-//        RefreshToken refreshToken = isPresentRefreshToken(member);
-//        refreshTokenRepository.delete(refreshToken);
-//    }
 
 }
