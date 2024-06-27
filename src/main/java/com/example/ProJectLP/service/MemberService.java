@@ -57,6 +57,9 @@ public class MemberService {
         if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
             throw new PrivateException(ErrorCode.SIGNUP_PASSWORD_CHECK);
         }
+        if (requestDto.getAuthNum().isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_EMAIL_CHECK);
+        }
 
         boolean emailCheck = mailSendService.emailCheck(requestDto.getEmail(), requestDto.getAuthNum());
         if (!emailCheck){

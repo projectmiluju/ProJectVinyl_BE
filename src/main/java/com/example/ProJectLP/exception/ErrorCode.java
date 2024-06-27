@@ -28,6 +28,7 @@ public enum ErrorCode {
     SIGNUP_EMPTY_PASSWORD(HttpStatus.BAD_REQUEST,"E_012","비밀번호를 입력해 주세요."),
     SIGNUP_EMPTY_PASSWORD_CHECK(HttpStatus.BAD_REQUEST,"E_012","비밀번호확인을 입력해 주세요."),
     SIGNUP_PASSWORD_CHECK(HttpStatus.BAD_REQUEST,"E_009","비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+    SIGNUP_EMPTY_EMAIL_CHECK(HttpStatus.BAD_REQUEST,"E_012","이메일 인증 코드를 입력해 주세요."),
     SIGNUP_EMAIL_CHECK(HttpStatus.BAD_REQUEST, "E_013", "이메일 인증 코드를 확인헤 주세요."),
 
     REFRESH_TOKEN_NOT_VALID(HttpStatus.BAD_REQUEST,"E_012","유효하지 않은 토큰입니다.");

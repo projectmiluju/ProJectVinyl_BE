@@ -3,12 +3,15 @@ package com.example.ProJectLP.service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Random;
 
 
@@ -33,19 +36,21 @@ public class MailSendService {
     }
 
     //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성합니다.
-    public ResponseDto<?> joinEmail(String email) {
+    public ResponseEntity<?> joinEmail(String email) {
+        if (email.isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_EMAIL);
+        }
         makeRandomNumber();
-        String setFrom = "dionisos198@naver.com"; // email-config에 설정한 자신의 이메일 주소를 입력
-        String toMail = email;
-        String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
+        String setFrom = "dnjsdyd0712@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+        String title = "ProJect Vinyl 회원 가입 인증 이메일 입니다."; // 이메일 제목
         String content =
-                "나의 APP을 방문해주셔서 감사합니다." + 	//html 형식으로 작성 !
+                "ProJect Vinyl에 방문해주셔서 감사합니다." + 	//html 형식으로 작성 !
                         "<br><br>" +
                         "인증 번호는 " + authNumber + "입니다." +
                         "<br>" +
                         "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
-        mailSend(setFrom, toMail, title, content);
-        return ResponseDto.success(Integer.toString(authNumber));
+        mailSend(setFrom, email, title, content);
+        return ResponseEntity.ok(Map.of("msg", "인증번호를 발송 했습니다."));
     }
 
     //이메일을 전송합니다.
@@ -71,12 +76,7 @@ public class MailSendService {
         if(redisUtil.getData(authNum)==null){
             return false;
         }
-        else if(redisUtil.getData(authNum).equals(email)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        else return redisUtil.getData(authNum).equals(email);
     }
 
 }
