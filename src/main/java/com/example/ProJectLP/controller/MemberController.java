@@ -35,7 +35,7 @@ public class MemberController {
 
     //로그아웃
     @RequestMapping(value = "/api/signout", method = RequestMethod.GET)
-    public ResponseDto<?> signOut(HttpServletRequest request) {
+    public ResponseEntity<?> signOut(HttpServletRequest request) {
         return memberService.logoutMember(request);
     }
 

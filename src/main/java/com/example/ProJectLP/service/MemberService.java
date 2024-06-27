@@ -7,7 +7,6 @@ import com.example.ProJectLP.dto.request.TokenDto;
 import com.example.ProJectLP.dto.request.MemberRequestDto;
 import com.example.ProJectLP.dto.request.SignInRequestDto;
 import com.example.ProJectLP.dto.response.MemberResponseDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 
 import com.example.ProJectLP.exception.ErrorCode;
 import com.example.ProJectLP.exception.PrivateException;
@@ -105,20 +104,17 @@ public class MemberService {
 
     //로그아웃
     @Transactional
-    public ResponseDto<?> logoutMember(HttpServletRequest request) {
+    public ResponseEntity<?> logoutMember(HttpServletRequest request) {
 
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
-            return ResponseDto.fail("403", "Token is not valid");
+            throw new PrivateException(ErrorCode.REFRESH_TOKEN_NOT_VALID);
         }
-
         Member member = tokenProvider.getMemberFromAuthentication();
-
         if (null == member) {
-            return ResponseDto.fail("400",
-                    "사용자를 찾을 수 없습니다.");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
-
-        return tokenProvider.deleteRefreshToken(request,member);
+        tokenProvider.deleteRefreshToken(request,member);
+        return ResponseEntity.ok(Map.of("msg", member.getUsername()+"님 로그아웃이 완료 됐습니다."));
     }
 
     public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
