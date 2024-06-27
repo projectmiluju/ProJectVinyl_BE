@@ -2,7 +2,6 @@ package com.example.ProJectLP.controller;
 
 import com.example.ProJectLP.dto.request.MemberRequestDto;
 import com.example.ProJectLP.dto.request.SignInRequestDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
