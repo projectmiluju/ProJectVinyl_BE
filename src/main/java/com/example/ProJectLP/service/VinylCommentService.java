@@ -8,7 +8,6 @@ import com.example.ProJectLP.domain.vinylComment.VinylComment;
 import com.example.ProJectLP.domain.vinylComment.VinylCommentRepository;
 import com.example.ProJectLP.dto.request.VinylCommentRequestDto;
 import com.example.ProJectLP.dto.response.PageVinylCommentResponseDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.dto.response.VinylCommentResponseDto;
 
 import com.example.ProJectLP.exception.ErrorCode;
@@ -139,20 +138,20 @@ public class VinylCommentService {
         return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 수정이 완료 됐습니다.","data", vinyl.getId()));
     }
 
-    //vinyl 댓글 조회
+    //vinyl 댓글 전체 조회
     @Transactional
-    public ResponseDto<?> getVinylCommentList(Long vinylId, int page, int limit) {
+    public ResponseEntity<?> getVinylCommentList(Long vinylId, int page, int limit) {
 
         Pageable pageable = PageRequest.of(page, limit);
 
-        Vinyl vinyl = vinylRepository.findById(vinylId).orElse(null);
+        Vinyl vinyl = isPresentVinyl(vinylId);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
 
         Page<VinylComment> vinylComments = vinylCommentRepository.findByVinylOrderByCreatedAtDesc(vinyl,pageable);
         if (vinylComments.isEmpty()) {
-            return ResponseDto.fail("400", "Not existing vinylComment");
+            throw new PrivateException(ErrorCode.VINYL_COMMENT_EMPTY);
         }
         List<VinylCommentResponseDto> vinylCommentResponseDtoList = new ArrayList<>();
         for (VinylComment vinylComment : vinylComments) {
@@ -170,7 +169,7 @@ public class VinylCommentService {
                 .currContent(vinylComments.getNumberOfElements())
                 .vinylCommentList(vinylCommentResponseDtoList).build();
 
-        return ResponseDto.success(pageVinylCommentResponseDto);
+        return ResponseEntity.ok(Map.of("msg", "바이닐 댓글 전체 조회가 완료 됐습니다.", "data", pageVinylCommentResponseDto));
     }
 
     @Transactional

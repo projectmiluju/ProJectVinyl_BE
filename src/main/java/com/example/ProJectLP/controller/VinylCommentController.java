@@ -1,7 +1,6 @@
 package com.example.ProJectLP.controller;
 
 import com.example.ProJectLP.dto.request.VinylCommentRequestDto;
-import com.example.ProJectLP.dto.response.ResponseDto;
 import com.example.ProJectLP.service.VinylCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +39,12 @@ public class  VinylCommentController {
         return vinylCommentService.updateVinylComment(vinylId, id, requestDto, request);
     }
 
-    //vinyl 댓글 조회
+    //vinyl 댓글 전체 조회
     @RequestMapping(value = "/get/vinyl/{vinylId}/commentlist", method = RequestMethod.GET)
-    public ResponseDto<?> getVinylCommentList(@PathVariable Long vinylId,
+    public ResponseEntity<?> getVinylCommentList(@PathVariable Long vinylId,
                                               @RequestParam("pageNum") int page,
                                               @RequestParam("pageLimit") int limit){
-
         page = page -1;
-
         return vinylCommentService.getVinylCommentList(vinylId, page, limit);
     }
 }
