@@ -35,6 +35,7 @@ public class VinylCommentService {
     private final TokenProvider tokenProvider;
     private final VinylRepository vinylRepository;
     private final VinylCommentRepository vinylCommentRepository;
+    private final RefreshTokenService refreshTokenService;
 
     //vinyl 댓글 등록
     @Transactional
@@ -174,6 +175,9 @@ public class VinylCommentService {
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
+        if (refreshTokenService.getData(request.getHeader("RefreshToken")) == null) {
+            return null;
+        }
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }

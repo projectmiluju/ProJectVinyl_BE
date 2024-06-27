@@ -6,12 +6,15 @@ import com.example.ProJectLP.domain.vinyl.Vinyl;
 import com.example.ProJectLP.domain.vinyl.VinylRepository;
 import com.example.ProJectLP.domain.vinylLike.VinylLike;
 import com.example.ProJectLP.domain.vinylLike.VinylLikeRepository;
-import com.example.ProJectLP.dto.response.ResponseDto;
+import com.example.ProJectLP.exception.ErrorCode;
+import com.example.ProJectLP.exception.PrivateException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,28 +24,28 @@ public class VinylLikeService {
     private final VinylLikeRepository vinylLikeRepository;
     private final VinylRepository vinylRepository;
     private final TokenProvider tokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     //vinyl 좋아요 등록
     @Transactional
-    public ResponseDto<?> likeVinyl(Long vinylId, HttpServletRequest request){
+    public ResponseEntity<?> likeVinyl(Long vinylId, HttpServletRequest request){
 
         if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
         Vinyl vinyl = isPresentVinyl(vinylId);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
 
         if (vinylLikeRepository.findByMemberIdAndVinylId(member.getId(),vinyl.getId()) != null) {
-            return ResponseDto.fail("400", "Already liked vinylId");
+            throw new PrivateException(ErrorCode.VINYL_LIKE_ALREADY);
         }
 
         VinylLike vinylLike = VinylLike.builder()
@@ -51,39 +54,39 @@ public class VinylLikeService {
                 .build();
         vinylLikeRepository.save(vinylLike);
 
-        return ResponseDto.success("Successfully liked vinyl");
+        return ResponseEntity.ok(Map.of("msg", "바이닐 좋아요가 완료 됐습니다." ));
     }
 
     //vinyl 좋아요 삭제
     @Transactional
-    public ResponseDto<?> unlikeVinyl(Long vinylId, HttpServletRequest request){
+    public ResponseEntity<?> unlikeVinyl(Long vinylId, HttpServletRequest request){
         if (null == request.getHeader("RefreshToken") || null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("400",
-                    "Login is required.");
+            throw new PrivateException(ErrorCode.LOGIN_REQUIRED);
         }
 
         Member member = validateMember(request);
         if (null == member) {
-            return ResponseDto.fail("400", "INVALID_TOKEN");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_MEMBER);
         }
 
         Vinyl vinyl = isPresentVinyl(vinylId);
         if (null == vinyl) {
-            return ResponseDto.fail("400", "Not existing vinylId");
+            throw new PrivateException(ErrorCode.VINYL_NOTFOUND);
         }
-
         if (vinylLikeRepository.findByMemberIdAndVinylId(member.getId(),vinyl.getId()) == null) {
-            return ResponseDto.fail("400", "Not existing liked vinylId");
+            throw new PrivateException(ErrorCode.VINYL_LIKE_NOT);
         }
-
         vinylLikeRepository.delete(vinylLikeRepository.findByMemberIdAndVinylId(member.getId(),vinyl.getId()));
 
-        return ResponseDto.success("Successfully unliked vinyl");
+        return ResponseEntity.ok(Map.of("msg","바이닐 좋아요 취소가 완료 됐습니다."));
     }
 
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
+        if (refreshTokenService.getData(request.getHeader("RefreshToken")) == null) {
+            return null;
+        }
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }

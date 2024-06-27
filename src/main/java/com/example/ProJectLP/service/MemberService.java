@@ -30,6 +30,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MailSendService mailSendService;
+    private final RefreshTokenService refreshTokenService;
 
 
     //회원가입
@@ -115,6 +116,10 @@ public class MemberService {
     //로그아웃
     @Transactional
     public ResponseEntity<?> logoutMember(HttpServletRequest request) {
+
+        if (refreshTokenService.getData(request.getHeader("RefreshToken")) == null) {
+            throw new PrivateException(ErrorCode.REFRESH_TOKEN_NOT_VALID);
+        }
 
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             throw new PrivateException(ErrorCode.REFRESH_TOKEN_NOT_VALID);

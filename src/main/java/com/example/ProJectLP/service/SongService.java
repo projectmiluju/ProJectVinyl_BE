@@ -25,6 +25,7 @@ public class SongService {
     private final SongRepository songRepository;
     private final VinylRepository vinylRepository;
     private final TokenProvider tokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     //트랙리스트 수정
     @Transactional
@@ -63,6 +64,9 @@ public class SongService {
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
+        if (refreshTokenService.getData(request.getHeader("RefreshToken")) == null) {
+            return null;
+        }
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }

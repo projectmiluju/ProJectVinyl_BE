@@ -29,6 +29,8 @@ public enum ErrorCode {
     VINYL_COMMENT_NOTFOUND(HttpStatus.BAD_REQUEST,"E_006","찾을수 없는 바이닐 댓글 입니다."),
     VINYL_COMMENT_EMPTY(HttpStatus.BAD_REQUEST,"E_006","바이닐 댓글이 존재하지 않습니다."),
 
+    VINYL_LIKE_ALREADY(HttpStatus.BAD_REQUEST,"E_021","이미 좋아요한 바이닐 입니다."),
+    VINYL_LIKE_NOT(HttpStatus.BAD_REQUEST,"E_022","좋아요 해놓지 않은 바이닐 입니다."),
 
 
 
@@ -52,10 +54,7 @@ public enum ErrorCode {
 //
 //    TOKEN_REISSUE(HttpStatus.BAD_REQUEST,"E_011","재로그인이 필요합니다."),
 //
-//    WISH_CHALLENGE_NOTFOUND(HttpStatus.BAD_REQUEST,"E_019","잘못된 챌린지 번호입니다."),
-//    WISH_MEMBER_NOTFOUND(HttpStatus.BAD_REQUEST,"E_020","찾을수 없는 회원입니다."),
-//    WISH_ALREADY_SELECT(HttpStatus.BAD_REQUEST,"E_021","이미 찜 해놓은 챌린지 입니다."),
-//    WISH_NOT_SELECT(HttpStatus.BAD_REQUEST,"E_022","찜 해놓지 않은 챌린지 입니다."),
+
 //    WISH_DELETE_FORBIDDEN(HttpStatus.BAD_REQUEST,"E_023","취소 권한이 없는 사용자 입니다.");
 
     private final HttpStatus httpStatus;

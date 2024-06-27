@@ -42,6 +42,7 @@ public class VinylService {
     private final S3Service s3Service;
     private final SongRepository songRepository;
     private final VinylCommentRepository vinylCommentRepository;
+    private final RefreshTokenService refreshTokenService;
 
     private final static String VIEWCOOKIENAME = "alreadyViewCookie";
 
@@ -337,6 +338,9 @@ public class VinylService {
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
+        if (refreshTokenService.getData(request.getHeader("RefreshToken")) == null) {
+            return null;
+        }
         if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
