@@ -29,7 +29,7 @@ public class MemberController {
 
     //로그인
     @RequestMapping(value = "/api/signin", method = RequestMethod.POST)
-    public ResponseDto<?> signIn(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response) {
+    public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response) {
         return memberService.loginMember(requestDto, response);
     }
 

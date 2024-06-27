@@ -37,23 +37,26 @@ public class MemberService {
     @Transactional
     public ResponseEntity<?> createMember(MemberRequestDto requestDto) {
 
+        if (requestDto.getUsername().isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_USERNAME);
+        }
         if (null != isPresentMemberByUsername(requestDto.getUsername())) {
             throw new PrivateException(ErrorCode.SIGNUP_ALREADY_USERNAME);
-        }
-        if (null != isPresentMemberByEmail(requestDto.getEmail())) {
-            throw new PrivateException(ErrorCode.SIGNUP_ALREADY_EMAIL);
-        }
-        if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
-            throw new PrivateException(ErrorCode.SIGNUP_PASSWORD_CHECK);
-        }
-        if (requestDto.getUsername().isBlank()) {
-            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_EMAIL);
         }
         if (requestDto.getEmail().isBlank()) {
             throw new PrivateException(ErrorCode.SIGNUP_EMPTY_EMAIL);
         }
+        if (null != isPresentMemberByEmail(requestDto.getEmail())) {
+            throw new PrivateException(ErrorCode.SIGNUP_ALREADY_EMAIL);
+        }
         if (requestDto.getPassword().isBlank()) {
             throw new PrivateException(ErrorCode.SIGNUP_EMPTY_PASSWORD);
+        }
+        if (requestDto.getPasswordConfirm().isBlank()) {
+            throw new PrivateException(ErrorCode.SIGNUP_EMPTY_PASSWORD_CHECK);
+        }
+        if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
+            throw new PrivateException(ErrorCode.SIGNUP_PASSWORD_CHECK);
         }
 
         boolean emailCheck = mailSendService.emailCheck(requestDto.getEmail(), requestDto.getAuthNum());
@@ -74,45 +77,30 @@ public class MemberService {
 
     //로그인
     @Transactional
-    public ResponseDto<?> loginMember(SignInRequestDto requestDto, HttpServletResponse response) {
+    public ResponseEntity<?> loginMember(SignInRequestDto requestDto, HttpServletResponse response) {
         Member member = isPresentMemberByUsername(requestDto.getUsername());
-
         if (null == member) {
-            return ResponseDto.fail("400",
-                    "User not found");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_USERNAME);
         }
-
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
-            return ResponseDto.fail("400", "Password error");
+            throw new PrivateException(ErrorCode.LOGIN_NOTFOUND_PASSWORD);
         }
-
         if (!member.isEmailCheck()){
-            return ResponseDto.fail("400", "Check your email and auth num");
+            throw new PrivateException(ErrorCode.SIGNUP_EMAIL_CHECK);
         }
 
+        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
+        tokenToHeaders(tokenDto, response);
 
-//        if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
-            TokenDto tokenDto = tokenProvider.generateTokenDto(member);
-            tokenToHeaders(tokenDto, response);
-//        }else {
-//            deleteRefreshToken(member);
-//            if (refreshTokenRepository.findByMemberId(member.getId()).isEmpty()) {
-//                TokenDto tokenDto = tokenProvider.generateTokenDto(member);
-//                tokenToHeaders(tokenDto, response);
-//            }
-//        }
-
-        return ResponseDto.success(
-                MemberResponseDto.builder()
-                        .id(member.getId())
-                        .username(member.getUsername())
-                        .role(member.isRole())
-                        .emailCheck(member.isEmailCheck())
-                        .createdAt(member.getCreatedAt())
-                        .modifiedAt(member.getModifiedAt())
-                        .build()
-        );
-
+        MemberResponseDto memberResponseDto = MemberResponseDto.builder()
+                .id(member.getId())
+                .username(member.getUsername())
+                .role(member.isRole())
+                .emailCheck(member.isEmailCheck())
+                .createdAt(member.getCreatedAt())
+                .modifiedAt(member.getModifiedAt())
+                .build();
+        return ResponseEntity.ok(Map.of("msg", member.getUsername()+"님 로그인이 완료 됏습니다.", "data", memberResponseDto));
     }
 
     //로그아웃
