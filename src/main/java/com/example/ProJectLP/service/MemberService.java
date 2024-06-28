@@ -10,6 +10,7 @@ import com.example.ProJectLP.dto.response.MemberResponseDto;
 
 import com.example.ProJectLP.exception.ErrorCode;
 import com.example.ProJectLP.exception.PrivateException;
+import io.sentry.spring.jakarta.tracing.SentrySpan;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +81,7 @@ public class MemberService {
 
     //로그인
     @Transactional
+    @SentrySpan
     public ResponseEntity<?> loginMember(SignInRequestDto requestDto, HttpServletResponse response) {
         if (requestDto.getUsername().isBlank()) {
             throw new PrivateException(ErrorCode.LOGIN_EMPTY_USERNAME);
