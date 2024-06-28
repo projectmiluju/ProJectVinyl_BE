@@ -65,7 +65,8 @@ dependencies {
 	implementation 'org.springframework:spring-context-support:5.3.9'
 
 	//sentry
-	implementation group: 'io.sentry', name: 'sentry', version: '7.9.0'
+	implementation 'io.sentry:sentry-spring-boot-starter:6.4.2'
+	implementation 'io.sentry:sentry-logback:6.4.2'
 
 
 }
