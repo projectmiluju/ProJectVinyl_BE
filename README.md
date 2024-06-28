@@ -11,15 +11,16 @@ Spring Security 6<br>
 Gradle<br>
 Java 17<br>
 Spring Data JPA<br>
-Spring Web<br>
 </p>
 
 <p> 
 AWS S3<br>
+AWS RDS<br>
 SWAGGER<br>
 H2 Database<br>
 Maria DB<br>
 JWT<br>
 Redis<br>
 Docker<br>
+Sentry<br>
 </p>
