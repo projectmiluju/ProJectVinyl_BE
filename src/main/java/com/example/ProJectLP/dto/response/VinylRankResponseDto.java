@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VinylRankResponseDto {
     private Long id;
+    private Integer rank;
     private String title;
     private String artist;
     private String imageUrl;

@@ -8,22 +8,23 @@ import com.example.ProJectLP.dto.response.VinylRankResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Component
 public class RankService {
 
     private final VinylRepository vinylRepository;
     private final VinylLikeRepository vinylLikeRepository;
 
-    @Transactional
+
     public ResponseEntity<?> rankVinylLike() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
@@ -49,6 +50,7 @@ public class RankService {
         for (int i = 0; i < dtoList.size(); i++) {
             VinylRankResponseDto rankDto = VinylRankResponseDto.builder()
                     .id(dtoList.get(i).getId())
+                    .rank(i+1)
                     .title(dtoList.get(i).getTitle())
                     .artist(dtoList.get(i).getArtist())
                     .numLikes(dtoList.get(i).getNumLikes())
@@ -58,11 +60,9 @@ public class RankService {
             rankDtoList.add(rankDto);
             if (i == 9) break;
         }
-
-        return ResponseEntity.ok(Map.of("msg","바이닐 좋아요 랭킹 조회가 완료 됐습니다.","data", rankDtoList));
+        return ResponseEntity.ok(Map.of("msg", "바이닐 좋아요 랭킹 조회가 완료 됐습니다.", "data", rankDtoList));
     }
 
-    @Transactional
     public ResponseEntity<?> rankVinylLikeMonth() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
@@ -89,6 +89,7 @@ public class RankService {
         for (int i = 0; i < dtoList.size(); i++) {
             VinylRankResponseDto rankDto = VinylRankResponseDto.builder()
                     .id(dtoList.get(i).getId())
+                    .rank(i+1)
                     .title(dtoList.get(i).getTitle())
                     .artist(dtoList.get(i).getArtist())
                     .numLikes(dtoList.get(i).getNumLikes())
@@ -102,7 +103,6 @@ public class RankService {
         return ResponseEntity.ok(Map.of("msg","최근 한달 기준 바이닐 좋아요 랭킹 조회가 완료 됐습니다.","data",rankDtoList));
     }
 
-    @Transactional
     public ResponseEntity<?> rankVinylView() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
@@ -128,6 +128,7 @@ public class RankService {
         for (int i = 0; i < dtoList.size(); i++) {
             VinylRankResponseDto rankDto = VinylRankResponseDto.builder()
                     .id(dtoList.get(i).getId())
+                    .rank(i+1)
                     .title(dtoList.get(i).getTitle())
                     .artist(dtoList.get(i).getArtist())
                     .numLikes(dtoList.get(i).getNumLikes())
