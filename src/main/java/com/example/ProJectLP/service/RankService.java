@@ -24,7 +24,7 @@ public class RankService {
     private final VinylRepository vinylRepository;
     private final VinylLikeRepository vinylLikeRepository;
 
-    @Scheduled(fixedDelay = 5000)
+
     public ResponseEntity<?> rankVinylLike() {
         List<Vinyl> vinylList = vinylRepository.findAll();
         List<VinylRankResponseDto> dtoList = new ArrayList<>();
