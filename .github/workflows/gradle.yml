@@ -17,6 +17,9 @@ on:
 permissions:
   contents: read
 
+env:
+  RESOURCE_PATH: ./src/main/resources/application.yaml
+
 jobs:
   # Spring Boot 애플리케이션을 빌드하여 도커허브에 푸시하는 과정
   build-docker-image:
@@ -30,7 +33,24 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # 2. Spring Boot 애플리케이션 빌드
+    - name: Generate Environment Variables File for Properties
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ${{ env.RESOURCE_PATH }}
+      env:
+        jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
+        sentry.dsn: ${{ secrets.SENTRY_DSN }}
+        spring.redis.host: ${{ secrets.SPRING_REDIS_HOST }}
+        spring.redis.port: ${{ secrets.SPRING_REDIS_PORT }}
+        spring.cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        spring.cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        spring.datasource.password: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+        spring.datasource.url: ${{ secrets.SPRING_DATASOURCE_URL }}
+        spring.datasource.username: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+        spring.mail.username: ${{ secrets.SPRING_MAIL_USERNAME }}
+        spring.mail.password: ${{ secrets.SPRING_MAIL_PASSWORD }}
+
+      # 2. Spring Boot 애플리케이션 빌드
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
@@ -52,24 +72,24 @@ jobs:
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
 
   # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행시키는 과정
-  run-docker-image-on-ec2:
-    # build (위)과정이 완료되어야 실행됩니다.
-    needs: build-docker-image
-    runs-on: self-hosted
-
-    steps:
-      # 최신 이미지를 풀받습니다
-      - name: docker pull
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
-
-      # 기존의 컨테이너를 중지시킵니다
-      - name: docker stop container
-        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
-
-      # 최신 이미지를 컨테이너화하여 실행시킵니다
-      - name: docker run new container
-        run: sudo docker run --name projectvinyl --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
-
-      # 미사용 이미지를 정리합니다
-      - name: delete old docker image
-        run: sudo docker system prune -f
+#  run-docker-image-on-ec2:
+#    # build (위)과정이 완료되어야 실행됩니다.
+#    needs: build-docker-image
+#    runs-on: self-hosted
+#
+#    steps:
+#      # 최신 이미지를 풀받습니다
+#      - name: docker pull
+#        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
+#
+#      # 기존의 컨테이너를 중지시킵니다
+#      - name: docker stop container
+#        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+#
+#      # 최신 이미지를 컨테이너화하여 실행시킵니다
+#      - name: docker run new container
+#        run: sudo docker run --name projectvinyl --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
+#
+#      # 미사용 이미지를 정리합니다
+#      - name: delete old docker image
+#        run: sudo docker system prune -f
