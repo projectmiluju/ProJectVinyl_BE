@@ -21,6 +21,7 @@ spring:
     redis:
       host: update
       port: 6379
+      password: update
     a:
       redis:
         index: 0
