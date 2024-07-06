@@ -20,6 +20,11 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @GetMapping("/")
+    public ResponseEntity<?> hello() {
+        return ResponseEntity.ok("배포 자동화 테스트");
+    }
+
     //회원가입
     @RequestMapping(value = "/api/signup", method = RequestMethod.POST)
     public ResponseEntity<?> signUp(@RequestBody @Valid MemberRequestDto requestDto) {
