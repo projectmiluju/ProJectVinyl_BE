@@ -59,6 +59,8 @@ dependencies {
 
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'com.redislabs', name: 'lettusearch', version: '2.4.3'
+
 
 	//이메일 인증
 	implementation 'javax.mail:mail:1.4.7'
