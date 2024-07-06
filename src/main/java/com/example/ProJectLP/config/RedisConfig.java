@@ -13,11 +13,14 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @Configuration
 public class RedisConfig {
 
-//    @Value("${spring.data.redis.host}")
-//    private String host;
+    @Value("${spring.data.redis.host}")
+    private String host;
 
     @Value("${spring.data.redis.port}")
     private int port;
+
+    @Value("${spring.data.redis.username}")
+    private String username;
 
     @Value("${spring.data.redis.password}")
     private String password;
@@ -48,9 +51,9 @@ public class RedisConfig {
 
     public LettuceConnectionFactory createConnectionFactoryWith(int index) {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName("43.201.57.32");
+        redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPort(port);
-        redisStandaloneConfiguration.setUsername("default");
+        redisStandaloneConfiguration.setUsername(username);
         redisStandaloneConfiguration.setPassword(password);
         redisStandaloneConfiguration.setDatabase(index);
 

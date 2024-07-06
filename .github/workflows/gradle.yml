@@ -42,6 +42,7 @@ jobs:
         sentry.dsn: ${{ secrets.SENTRY_DSN }}
         spring.redis.host: ${{ secrets.SPRING_REDIS_HOST }}
         spring.redis.port: ${{ secrets.SPRING_REDIS_PORT }}
+        spring.redis.username: ${{ secrets.SPRING_REDIS_USERNAME }}
         spring.redis.password: ${{ secrets.SPRING_REDIS_PASSWORD }}
         spring.cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         spring.cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

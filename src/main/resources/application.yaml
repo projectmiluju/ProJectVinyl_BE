@@ -20,8 +20,9 @@ spring:
   data:
     redis:
       host: update
-      port: 6379
+      port: update
       password: update
+      username: update
     a:
       redis:
         index: 0
