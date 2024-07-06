@@ -22,7 +22,7 @@ jobs:
   build-docker-image:
     runs-on: ubuntu-latest
     container:
-      image: owasp/zap2docker-stable
+      image: ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
       options: --user root
     steps:
     - uses: actions/checkout@v3
