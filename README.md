@@ -16,6 +16,7 @@ Spring Data JPA<br>
 <p> 
 AWS S3<br>
 AWS RDS<br>
+AWS EC2<br>
 SWAGGER<br>
 H2 Database<br>
 Maria DB<br>
@@ -23,4 +24,5 @@ JWT<br>
 Redis<br>
 Docker<br>
 Sentry<br>
+Github Actions<br>
 </p>
