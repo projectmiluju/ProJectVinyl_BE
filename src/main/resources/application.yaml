@@ -19,7 +19,7 @@ spring:
     type: redis
   data:
     redis:
-      host: redis
+      host: 43.201.57.32
       port: 6379
       password: update
 #      username: update
