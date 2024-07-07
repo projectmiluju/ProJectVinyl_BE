@@ -20,7 +20,7 @@ spring:
   data:
     redis:
       host: update
-      port: 0000
+      port: 6379
       password: update
       username: update
       ssl:
