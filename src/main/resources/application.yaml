@@ -23,6 +23,8 @@ spring:
       port: 0000
       password: update
       username: update
+      ssl:
+        enabled: true
     a:
       redis:
         index: 0
