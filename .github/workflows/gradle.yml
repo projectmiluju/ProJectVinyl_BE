@@ -40,7 +40,7 @@ jobs:
       env:
         jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
         sentry.dsn: ${{ secrets.SENTRY_DSN }}
-        spring.redis.host: ${{ secrets.SPRING_REDIS_HOST }}
+#        spring.redis.host: ${{ secrets.SPRING_REDIS_HOST }}
         spring.redis.port: ${{ secrets.SPRING_REDIS_PORT }}
         spring.redis.username: ${{ secrets.SPRING_REDIS_USERNAME }}
         spring.redis.password: ${{ secrets.SPRING_REDIS_PASSWORD }}
