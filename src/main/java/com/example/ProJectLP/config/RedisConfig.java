@@ -51,7 +51,7 @@ public class RedisConfig {
 
     public LettuceConnectionFactory createConnectionFactoryWith(int index) {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName("43.201.57.32");
+        redisStandaloneConfiguration.setHostName("redis");
         redisStandaloneConfiguration.setPort(port);
 //        redisStandaloneConfiguration.setUsername(username);
         redisStandaloneConfiguration.setPassword(password);
