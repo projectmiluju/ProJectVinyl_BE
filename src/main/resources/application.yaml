@@ -22,7 +22,7 @@ spring:
       host: update
       port: 6379
       password: update
-      username: update
+#      username: update
       ssl:
         enabled: true
     a:
