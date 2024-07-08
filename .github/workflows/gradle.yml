@@ -79,7 +79,7 @@ jobs:
   run-docker-image-on-ec2:
     # build (위)과정이 완료되어야 실행됩니다.
     needs: build-docker-image
-    runs-on: self-hosted
+    runs-on: [ self-hosted, Linux, x64 ]
 
     steps:
       # 최신 이미지를 풀받습니다
