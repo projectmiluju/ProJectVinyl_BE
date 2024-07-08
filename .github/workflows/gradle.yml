@@ -86,6 +86,7 @@ jobs:
       - name: docker pull
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
 #
+
 #      # 기존의 컨테이너를 중지시킵니다
 #      - name: docker stop container
 #        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
