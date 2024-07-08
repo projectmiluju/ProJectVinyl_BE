@@ -95,7 +95,7 @@ jobs:
         run: sudo docker run --name projectvinyl --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
 
       - name: docker run redis
-        run: sudo docker run -p 6379:6379 --name redis_vinyl -d redis --requirepass ${{ secrets.SPRING_REDIS_PASSWORD }}
+        run: sudo docker run -p 6379:6379 -d redis --requirepass ${{ secrets.SPRING_REDIS_PASSWORD }}
 #
       # 미사용 이미지를 정리합니다
       - name: delete old docker image
