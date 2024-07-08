@@ -85,15 +85,17 @@ jobs:
       # 최신 이미지를 풀받습니다
       - name: docker pull
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
-#
 
-#      # 기존의 컨테이너를 중지시킵니다
-#      - name: docker stop container
-#        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
-#
+      # 기존의 컨테이너를 중지시킵니다
+      - name: docker stop container
+        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+
       # 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: docker run new container
-        run: sudo docker run -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
+        run: sudo docker run --name projectvinyl --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/projectvinyl
+
+      - name: docker run redis
+        run: sudo docker run -p 6379:6379 --name redis_vinyl -d redis --requirepass ${{ secrets.SPRING_REDIS_PASSWORD }}
 #
       # 미사용 이미지를 정리합니다
       - name: delete old docker image
